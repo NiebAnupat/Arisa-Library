@@ -14,7 +14,7 @@ const Sidebar = () => {
         <div className="relative w-[65px] h-screen p-4">
             <div className="font-bold mb-14">
                 <div>
-                    <img src="./book.png" />
+                    <img src="./assets/book.png" />
                 </div>
             </div>
 
