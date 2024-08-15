@@ -1,7 +1,6 @@
 ﻿namespace Server.Models;
 
-public partial class Transaction
-{
+public partial class Transaction : BaseEntity {
     public int TransactionId { get; set; }
 
     public int? BookId { get; set; }

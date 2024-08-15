@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Server.Data;
+using server.Models.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,46 +10,46 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
 
+#region Database
+builder.Services.AddDbContext<ArisaLibraryContext>(options =>
+options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+#endregion
 
-// builder.Services.AddDbContext<ArisaLibraryContext>(options =>
-// options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+#region Configuration
+// Add the JWT and AppSettings to the configuration
+JWT jwt = new();
+AppSettings appSettings = new();
+builder.Configuration.GetSection(ConfigKey.JWT.ToString()).Bind(jwt);
+builder.Configuration.GetSection(ConfigKey.AppSettings.ToString()).Bind(appSettings);
+
+// Validate the JWT and set the secret key
+Validator.ValidateObject(jwt, new ValidationContext(jwt), true);
+Validator.ValidateObject(appSettings, new ValidationContext(appSettings), true);
+#endregion
+
+#region Services Registration
+// Register the services here
+builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
+#endregion
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+if (app.Environment.IsDevelopment()) {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.UseStaticFiles();
 
 app.MapControllers();
 
+app.MapGet("/api/health", () => "Healthy!");
+
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
