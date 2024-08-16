@@ -8,11 +8,6 @@ namespace Server.Services {
             _environment = environment;
         }
 
-
-        Task<byte[]> IFileService.GetFileAsync(string filename) {
-            throw new NotImplementedException();
-        }
-
         async Task<string> IFileService.SaveFileAsync(IFormFile file) {
 
             var fileExtension = Path.GetExtension(file.FileName);
@@ -41,5 +36,8 @@ namespace Server.Services {
 
         }
 
+        string IFileService.MapFile(string filename) {
+            return Path.Combine(_environment.WebRootPath, "uploads", filename);
+        }
     }
 }
