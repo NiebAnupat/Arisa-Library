@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.DTOs;
 
@@ -10,12 +11,13 @@ public class UserController : ControllerBase {
         _userService = userService;
     }
 
-    // GET: api/User
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetUsers() {
-        var users = await _userService.GetAllAsync();
-        return Ok(users);
-    }
+        // GET: api/User
+        [HttpGet]
+        [Authorize]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers() {
+            var users = await _userService.GetAllAsync();
+            return Ok(users);
+        }
 
     // GET: api/User/5
     [HttpGet("{id}")]

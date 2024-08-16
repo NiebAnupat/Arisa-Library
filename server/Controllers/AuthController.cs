@@ -1,58 +1,49 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using Serilog;
 
 namespace Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController : ControllerBase
-{
-    private readonly UserManager<IdentityUser> _userManager;
-    private readonly IConfiguration _configuration;
-
-    public AuthController(UserManager<IdentityUser> userManager, IConfiguration configuration)
-    {
-        _userManager = userManager;
-        _configuration = configuration;
+public class AuthController : ControllerBase {
+    private readonly IUserService _userService;
+    public AuthController(IUserService userService) {
+        _userService = userService;
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDTO model)
-    {
-        var user = await _userManager.FindByNameAsync(model.Email);
-        if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
-        {
-            var token = GenerateJwtToken(user);
-            return Ok(new { token });
+    public async Task<IActionResult> Login([FromBody] LoginDTO model) {
+        if (!await _userService.ValidateUserAsync(model.Email, model.Password)) {
+            return Unauthorized();
         }
 
-        return Unauthorized();
+        string accessToken = _userService.GenerateJwtToken(model.Email);
+
+        // Log token for debugging (be careful with sensitive information)
+        Log.Debug("Generated access token: {accessToken}", accessToken);
+
+        // Set cookie
+        Response.Cookies.Append("access_token", accessToken, new CookieOptions {
+            HttpOnly = true,
+            SameSite = SameSiteMode.Strict,
+            Secure = true
+        });
+
+        return Ok(new { message = "Login successful", isSuccess = true });
     }
 
-    private string GenerateJwtToken(IdentityUser user)
-    {
-        var claims = new[]
-        {
-            new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Secret"]));
+    [HttpPost("logout")]
+    public IActionResult Logout() {
 
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        // check if cookie exists
+        if (Request.Cookies["access_token"] == null) {
+            return BadRequest(new { message = "No cookie found", isSuccess = false });
+        }
 
-        var token = new JwtSecurityToken(
-            // issuer: _configuration["Jwt:Issuer"],
-            // audience: _configuration["Jwt:Audience"],
-            claims: claims,
-            expires: DateTime.Now.AddMonths(3),
-            signingCredentials: creds);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        Response.Cookies.Delete("access_token");
+        return Ok(new { message = "Logout successful", isSuccess = true });
     }
+
 }
 

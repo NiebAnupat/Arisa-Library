@@ -6,4 +6,5 @@ global using Server.Services;
 global using Server.Services.Interfaces;
 global using Server.DTOs;
 global using Server.Attributes;
+global using Server.Middlewares;
 global using System.ComponentModel.DataAnnotations;
