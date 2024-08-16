@@ -9,7 +9,7 @@ const Header = () => {
         <div className="flex gap-4 p-4 justify-end">
             <div className="flex flex-col items-end ">
                 <p className="font-semibold">Username</p>
-                <p className="text-xs">Libralian</p>
+                <p className="text-xs">บรรณารักษ์</p>
             </div>
 
             <Avatar>

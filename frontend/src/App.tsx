@@ -3,8 +3,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css'
 import Sidebar from './components/layouts/Sidebar';
 import Header from './components/layouts/Header';
+// import Layout from './components/layouts/Layout';
 
-import Dashboard from './pages/Dashboard';
+import Home from './pages/Home.tsx';
 import BookManage from './pages/BookManage';
 import UserManage from './pages/UserManage';
 import { useEffect } from 'react';
@@ -20,9 +21,9 @@ function App() {
         <Sidebar />
         <div className='flex-1'>
           <Header />
-          <div className='bg-gray-100 h-dvh rounded-tl-[30px] p-8'>
+          <div className='bg-gray-100 ml-16 rounded-tl-[30px] overflow-hidden'>
             <Routes>
-              <Route path='/' element={<Dashboard />} />
+              <Route path='/' element={<Home />} />
               <Route path='/bookManage' element={<UserManage />} />
               <Route path='/userManage' element={<BookManage />} />
             </Routes>
