@@ -2,8 +2,7 @@
 
 namespace Server.Models;
 
-public partial class User : BaseEntity
-{
+public partial class User : BaseEntity {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid UserId { get; set; }
@@ -17,13 +16,11 @@ public partial class User : BaseEntity
     [EnumDataType(typeof(Role))]
     public Role Role { get; set; }
 
-    public virtual ICollection<Book> Books { get; set; } = new List<Book>();
+    //public virtual ICollection<Book> Books { get; set; } = new List<Book>();
 
-    public virtual ICollection<User> CreatedUser { get; set; } = new List<User>();
+    //public virtual ICollection<User> CreatedUser { get; set; } = new List<User>();
 
-    public virtual ICollection<Transaction> TransactionAdmins { get; set; } =
-        new List<Transaction>();
+    public virtual ICollection<Transaction> TransactionAdmins { get; set; } = null;
 
-    public virtual ICollection<Transaction> TransactionUsers { get; set; } =
-        new List<Transaction>();
+    public virtual ICollection<Transaction> TransactionUsers { get; set; } = null;
 }

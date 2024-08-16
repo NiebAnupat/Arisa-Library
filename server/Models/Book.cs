@@ -18,5 +18,5 @@ public partial class Book : BaseEntity
 
     public bool Available { get; set; } = true;
 
-    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    public virtual ICollection<Transaction> Transactions { get; set; } = null;
 }

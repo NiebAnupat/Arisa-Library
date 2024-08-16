@@ -9,6 +9,8 @@ using System.Text;
 
 using Serilog;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -17,6 +19,9 @@ Log.Logger = new LoggerConfiguration()
 try {
     Log.Information("Starting web application");
     var builder = WebApplication.CreateBuilder(args);
+
+    
+
     builder.Host.UseSerilog((context, loggerConfiguration) => {
         loggerConfiguration.WriteTo.Console();
         loggerConfiguration.ReadFrom.Configuration(context.Configuration);
@@ -25,6 +30,7 @@ try {
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddHttpContextAccessor();
+
 
     builder.Services.AddSwaggerGen(option => {
         option.SwaggerDoc("v1", new() { Title = "Arisa Library API", Version = "v1" });
@@ -48,7 +54,10 @@ try {
     });
     });
 
-    builder.Services.AddControllers();
+    builder.Services.AddControllers().AddJsonOptions(options => {
+        options.JsonSerializerOptions.MaxDepth = 128;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
 
 
     #region Database

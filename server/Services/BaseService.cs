@@ -25,10 +25,10 @@ namespace Server.Services {
 
         public async Task<IEnumerable<T>> GetAllAsync() {
             // Retrieve only active entities
-            return await _context.Set<T>().Where(e => e.IsActive).ToListAsync();
+            return await _context.Set<T>().Where(e => e.IsActive).OrderBy(e => e.CreatedUTC).Include(e => e.CreatedByUser).AsSplitQuery().ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(Guid id) {
+        public virtual async Task<T> GetByIdAsync(Guid id) {
             T entity = await _context.Set<T>().FindAsync(id);
             // Return entity only if it's active
             return entity?.IsActive == true ? entity : null;

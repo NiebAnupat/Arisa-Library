@@ -51,6 +51,7 @@ public class AuthController : ControllerBase {
 
 
     [HttpPost("logout")]
+    [Authorize]
     public IActionResult Logout() {
 
         // check if cookie exists
