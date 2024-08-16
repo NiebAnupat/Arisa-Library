@@ -2,6 +2,6 @@
     public interface IUserService : IBaseService<User> {
         Task<User> GetByEmailAsync(string email);
         Task<bool> ValidateUserAsync(string email, string password);
-        string GenerateJwtToken(string email);
+        string GenerateJwtToken(string email, Role role);
     }
 }

@@ -13,15 +13,17 @@ public class AuthController : ControllerBase {
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model) {
+        Log.Information("Login attempt for {email}", model.Email);
         if (!await _userService.ValidateUserAsync(model.Email, model.Password)) {
             return Unauthorized();
         }
 
-        string accessToken = _userService.GenerateJwtToken(model.Email);
+        User user = await _userService.GetByEmailAsync(model.Email);
 
-        // Log token for debugging (be careful with sensitive information)
-        Log.Debug("Generated access token: {accessToken}", accessToken);
+        string accessToken = _userService.GenerateJwtToken(user.Email, user.Role);
 
+
+        Log.Debug($"Setting cookie for connection id : {Request.HttpContext.Connection.Id}");
         // Set cookie
         Response.Cookies.Append("access_token", accessToken, new CookieOptions {
             HttpOnly = true,
@@ -29,6 +31,7 @@ public class AuthController : ControllerBase {
             Secure = true
         });
 
+        Log.Information("User {email} logged in", user.Email);
         return Ok(new { message = "Login successful", isSuccess = true });
     }
 

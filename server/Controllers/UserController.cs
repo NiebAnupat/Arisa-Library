@@ -11,9 +11,9 @@ public class UserController : ControllerBase {
         _userService = userService;
     }
 
-        // GET: api/User
-        [HttpGet]
-        [Authorize]
+    // GET: api/User
+    [HttpGet]
+    [Authorize(Roles ="Admin")]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers() {
             var users = await _userService.GetAllAsync();
             return Ok(users);

@@ -27,18 +27,23 @@ namespace Server.Services {
 
 
         async Task<bool> IUserService.ValidateUserAsync(string email, string password) {
+            Log.Information("Validating user {email}", email);
             User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (user is null) {
+                Log.Warning("User {email} not found", email);
                 return false;
             }
 
+            Log.Debug("Comparing password for {email}", email);
+            Log.Information("User {email} validated", email);
             return BCrypt.Net.BCrypt.EnhancedVerify(password, user.Password);
         }
-        string IUserService.GenerateJwtToken(string email) {
+        string IUserService.GenerateJwtToken(string email, Role role) {
             Log.Debug("Generating JWT token for {email}", email);
 
             List<Claim> claims = new() {
                  new Claim(JwtRegisteredClaimNames.Sub, email),
+                 new Claim(ClaimTypes.Role, role.ToString()),
                  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -55,6 +60,8 @@ namespace Server.Services {
 
             SecurityToken token = jwtSecurityTokenHandler.CreateToken(tokenDescriptor);
             string jwtToken = jwtSecurityTokenHandler.WriteToken(token);
+            Log.Debug("Generated access token: {jwtToken}", jwtToken);
+
             return jwtToken;
         }
 
