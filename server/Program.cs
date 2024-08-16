@@ -24,6 +24,7 @@ try {
     // Add services to the container.
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddHttpContextAccessor();
 
     builder.Services.AddSwaggerGen(option => {
         option.SwaggerDoc("v1", new() { Title = "Arisa Library API", Version = "v1" });
@@ -75,6 +76,9 @@ try {
     builder.Services.AddScoped<IBookService, BookService>();
     builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddScoped<ITransactionService, TransactionService>();
+
+    // Register the attribute
+    builder.Services.AddScoped<UserInfoAttribute>();
     #endregion
 
     #region Authentification(JWT)

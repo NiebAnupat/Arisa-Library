@@ -42,7 +42,7 @@ namespace Server.Services {
             Log.Debug("Generating JWT token for {email}", email);
 
             List<Claim> claims = new() {
-                 new Claim(JwtRegisteredClaimNames.Sub, email),
+                 new Claim(JwtRegisteredClaimNames.Email, email),
                  new Claim(ClaimTypes.Role, role.ToString()),
                  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };

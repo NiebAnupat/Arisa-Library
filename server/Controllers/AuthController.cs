@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 
@@ -10,6 +11,19 @@ public class AuthController : ControllerBase {
     public AuthController(IUserService userService) {
         _userService = userService;
     }
+
+    [HttpGet("profile")]
+    [Authorize]
+    [ServiceFilter(typeof(UserInfoAttribute))]
+    public IActionResult Profile() {
+        if (!HttpContext.Items.ContainsKey("User")) {
+            return BadRequest(new { message = "User not found", isSuccess = false });
+        }
+
+        User user = (User) HttpContext.Items["User"];
+        return Ok(new { user });
+    }
+
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginDTO model) {

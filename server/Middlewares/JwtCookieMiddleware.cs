@@ -4,10 +4,8 @@ using Newtonsoft.Json;
 namespace Server.Middlewares {
     public class JwtCookieMiddleware {
         private readonly RequestDelegate _next;
-        private readonly ILogger<JwtCookieMiddleware> _logger;
-        public JwtCookieMiddleware(RequestDelegate next, ILogger<JwtCookieMiddleware> logger) {
+        public JwtCookieMiddleware(RequestDelegate next) {
             _next = next;
-            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context) {
