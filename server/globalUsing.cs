@@ -1,7 +1,9 @@
 ﻿global using Server.Data;
 global using Server.Models;
 global using Server.Models.Options;
+global using Server.Models.Enums;
 global using Server.Services;
 global using Server.Services.Interfaces;
 global using Server.DTOs;
+global using Server.Attributes;
 global using System.ComponentModel.DataAnnotations;

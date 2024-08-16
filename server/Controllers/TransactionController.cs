@@ -30,7 +30,7 @@ namespace server.Controllers
 
         // GET: api/Transaction/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Transaction>> GetTransaction(int id)
+        public async Task<ActionResult<Transaction>> GetTransaction(Guid id)
         {
             var transaction = await _context.Transactions.FindAsync(id);
 
@@ -45,7 +45,7 @@ namespace server.Controllers
         // PUT: api/Transaction/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTransaction(int id, Transaction transaction)
+        public async Task<IActionResult> PutTransaction(Guid id, Transaction transaction)
         {
             if (id != transaction.TransactionId)
             {
@@ -86,7 +86,7 @@ namespace server.Controllers
 
         // DELETE: api/Transaction/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTransaction(int id)
+        public async Task<IActionResult> DeleteTransaction(Guid id)
         {
             var transaction = await _context.Transactions.FindAsync(id);
             if (transaction == null)
@@ -100,7 +100,7 @@ namespace server.Controllers
             return NoContent();
         }
 
-        private bool TransactionExists(int id)
+        private bool TransactionExists(Guid id)
         {
             return _context.Transactions.Any(e => e.TransactionId == id);
         }

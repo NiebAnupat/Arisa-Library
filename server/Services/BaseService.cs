@@ -28,7 +28,7 @@ namespace Server.Services {
             return await _context.Set<T>().Where(e => e.IsActive).ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(int id) {
+        public async Task<T> GetByIdAsync(Guid id) {
             T entity = await _context.Set<T>().FindAsync(id);
             // Return entity only if it's active
             return entity?.IsActive == true ? entity : null;

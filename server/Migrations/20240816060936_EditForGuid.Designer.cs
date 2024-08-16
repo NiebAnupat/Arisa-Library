@@ -12,8 +12,8 @@ using Server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(ArisaLibraryContext))]
-    [Migration("20240815073138_EditBaseEntity")]
-    partial class EditBaseEntity
+    [Migration("20240816060936_EditForGuid")]
+    partial class EditForGuid
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,12 +27,10 @@ namespace server.Migrations
 
             modelBuilder.Entity("Server.Models.Book", b =>
                 {
-                    b.Property<int>("BookId")
+                    b.Property<Guid>("BookId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("book_id");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("BookId"));
 
                     b.Property<string>("Author")
                         .HasMaxLength(255)
@@ -50,7 +48,13 @@ namespace server.Migrations
                         .HasColumnType("character varying(255)")
                         .HasColumnName("cover_filename");
 
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Description")
@@ -71,31 +75,37 @@ namespace server.Migrations
                     b.HasKey("BookId")
                         .HasName("books_pkey");
 
+                    b.HasIndex("CreatedByUserId");
+
                     b.ToTable("books", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.Transaction", b =>
                 {
-                    b.Property<int>("TransactionId")
+                    b.Property<Guid>("TransactionId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("transaction_id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TransactionId"));
-
-                    b.Property<int?>("AdminId")
-                        .HasColumnType("integer")
+                    b.Property<Guid?>("AdminId")
+                        .HasColumnType("uuid")
                         .HasColumnName("admin_id");
 
-                    b.Property<int?>("BookId")
-                        .HasColumnType("integer")
+                    b.Property<Guid?>("BookId")
+                        .HasColumnType("uuid")
                         .HasColumnName("book_id");
 
                     b.Property<DateOnly>("BorrowDate")
                         .HasColumnType("date")
                         .HasColumnName("borrow_date");
 
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedUTC")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateOnly>("DueDate")
@@ -118,8 +128,8 @@ namespace server.Migrations
                     b.Property<DateTime>("UpdatedUTC")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("integer")
+                    b.Property<Guid?>("UserId")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
                     b.HasKey("TransactionId")
@@ -129,6 +139,8 @@ namespace server.Migrations
 
                     b.HasIndex("BookId");
 
+                    b.HasIndex("CreatedByUserId");
+
                     b.HasIndex("UserId");
 
                     b.ToTable("transactions", (string)null);
@@ -136,15 +148,24 @@ namespace server.Migrations
 
             modelBuilder.Entity("Server.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("uuid")
                         .HasColumnName("user_id");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserId"));
+                    b.Property<Guid?>("CreatedByUserId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedUTC")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("DeletedUTC")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("Email");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
@@ -161,6 +182,7 @@ namespace server.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("Role")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)")
                         .HasColumnName("role");
@@ -168,18 +190,24 @@ namespace server.Migrations
                     b.Property<DateTime>("UpdatedUTC")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Username")
-                        .HasMaxLength(255)
-                        .HasColumnType("character varying(255)")
-                        .HasColumnName("username");
-
                     b.HasKey("UserId")
                         .HasName("users_pkey");
 
-                    b.HasIndex(new[] { "Username" }, "users_username_key")
+                    b.HasIndex("CreatedByUserId");
+
+                    b.HasIndex(new[] { "Email" }, "users_email_key")
                         .IsUnique();
 
                     b.ToTable("users", (string)null);
+                });
+
+            modelBuilder.Entity("Server.Models.Book", b =>
+                {
+                    b.HasOne("Server.Models.User", "CreatedByUser")
+                        .WithMany("Books")
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("Server.Models.Transaction", b =>
@@ -194,6 +222,10 @@ namespace server.Migrations
                         .HasForeignKey("BookId")
                         .HasConstraintName("transactions_book_id_fkey");
 
+                    b.HasOne("Server.Models.User", "CreatedByUser")
+                        .WithMany()
+                        .HasForeignKey("CreatedByUserId");
+
                     b.HasOne("Server.Models.User", "User")
                         .WithMany("TransactionUsers")
                         .HasForeignKey("UserId")
@@ -203,7 +235,18 @@ namespace server.Migrations
 
                     b.Navigation("Book");
 
+                    b.Navigation("CreatedByUser");
+
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Server.Models.User", b =>
+                {
+                    b.HasOne("Server.Models.User", "CreatedByUser")
+                        .WithMany("CreatedUser")
+                        .HasForeignKey("CreatedByUserId");
+
+                    b.Navigation("CreatedByUser");
                 });
 
             modelBuilder.Entity("Server.Models.Book", b =>
@@ -213,6 +256,10 @@ namespace server.Migrations
 
             modelBuilder.Entity("Server.Models.User", b =>
                 {
+                    b.Navigation("Books");
+
+                    b.Navigation("CreatedUser");
+
                     b.Navigation("TransactionAdmins");
 
                     b.Navigation("TransactionUsers");

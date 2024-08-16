@@ -1,8 +1,12 @@
-﻿
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Server.Models;
 
-public partial class Book : BaseEntity {
-    public int BookId { get; set; }
+public partial class Book : BaseEntity
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid BookId { get; set; }
 
     public string Title { get; set; } = null!;
 

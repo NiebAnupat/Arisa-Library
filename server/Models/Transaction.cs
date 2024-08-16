@@ -1,13 +1,17 @@
-﻿namespace Server.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Server.Models;
 
 public partial class Transaction : BaseEntity {
-    public int TransactionId { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid TransactionId { get; set; }
 
-    public int? BookId { get; set; }
+    public Guid? BookId { get; set; }
 
-    public int? UserId { get; set; }
+    public Guid? UserId { get; set; }
 
-    public int? AdminId { get; set; }
+    public Guid? AdminId { get; set; }
 
     public DateOnly BorrowDate { get; set; }
 

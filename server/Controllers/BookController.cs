@@ -21,7 +21,7 @@ namespace server.Controllers {
 
         // GET: api/Book/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Book>> GetBook(int id) {
+        public async Task<ActionResult<Book>> GetBook(Guid id) {
             var book = await _bookService.GetByIdAsync(id);
 
             if (book == null) {
@@ -34,7 +34,7 @@ namespace server.Controllers {
         // PUT: api/Book/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutBook(int id, [FromBody] UpdateBookDTO model) {
+        public async Task<IActionResult> PutBook(Guid id, [FromBody] UpdateBookDTO model) {
 
             Book book = await _bookService.GetByIdAsync(id);
             if (book is null) {
@@ -52,6 +52,8 @@ namespace server.Controllers {
             if (model.Description != null) {
                 book.Description = model.Description;
             }
+
+            book.UpdatedUTC = DateTime.UtcNow;
 
 
 
@@ -91,7 +93,7 @@ namespace server.Controllers {
 
         // DELETE: api/Book/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id) {
+        public async Task<IActionResult> DeleteBook(Guid id) {
             try {
                 var book = await _bookService.GetByIdAsync(id);
                 if (book == null) {
@@ -107,7 +109,7 @@ namespace server.Controllers {
 
         }
 
-        private bool BookExists(int id) {
+        private bool BookExists(Guid id) {
             return _bookService.GetAllAsync().Result.Any(e => e.BookId == id);
         }
     }

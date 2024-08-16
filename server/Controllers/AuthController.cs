@@ -21,9 +21,9 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    public async Task<IActionResult> Login([FromBody] LoginDTO model)
     {
-        var user = await _userManager.FindByNameAsync(model.Username);
+        var user = await _userManager.FindByNameAsync(model.Email);
         if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
         {
             var token = GenerateJwtToken(user);
