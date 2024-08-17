@@ -484,4 +484,4 @@ $RECYCLE.BIN/
 *.swp
 
 # Uploads Files
-#wwwroot/uploads
+wwwroot/uploads
