@@ -1,16 +1,11 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using server.Models.Options;
-using System.Security.Claims;
-using System.Text;
-
 using Serilog;
-using Newtonsoft.Json;
+using server.Models.Options;
+using System.Text;
 using System.Text.Json.Serialization;
-using System.Text.Json;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -20,7 +15,7 @@ try {
     Log.Information("Starting web application");
     var builder = WebApplication.CreateBuilder(args);
 
-    
+
 
     builder.Host.UseSerilog((context, loggerConfiguration) => {
         loggerConfiguration.WriteTo.Console();
@@ -57,6 +52,7 @@ try {
     builder.Services.AddControllers().AddJsonOptions(options => {
         options.JsonSerializerOptions.MaxDepth = 128;
         options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
     });
 
 

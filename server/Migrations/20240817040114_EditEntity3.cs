@@ -4,7 +4,7 @@
 
 namespace server.Migrations {
     /// <inheritdoc />
-    public partial class EditEntity2 : Migration {
+    public partial class EditEntity3 : Migration {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder) {
 

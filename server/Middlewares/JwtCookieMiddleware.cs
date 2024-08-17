@@ -1,7 +1,4 @@
-﻿
-using Newtonsoft.Json;
-
-namespace Server.Middlewares {
+﻿namespace Server.Middlewares {
     public class JwtCookieMiddleware {
         private readonly RequestDelegate _next;
         public JwtCookieMiddleware(RequestDelegate next) {

@@ -2,8 +2,7 @@
 
 namespace Server.Models;
 
-public partial class Book : BaseEntity
-{
+public partial class Book : BaseEntity {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid BookId { get; set; }

@@ -1,8 +1,6 @@
 ﻿
-namespace Server.Models.Options
-{
-    public class AppSettings
-    {
+namespace Server.Models.Options {
+    public class AppSettings {
         [Required]
         public string Greeting { get; set; }
 

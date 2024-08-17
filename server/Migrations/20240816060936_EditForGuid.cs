@@ -1,20 +1,15 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace server.Migrations
-{
+namespace server.Migrations {
     /// <inheritdoc />
-    public partial class EditForGuid : Migration
-    {
+    public partial class EditForGuid : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "users",
-                columns: table => new
-                {
+                columns: table => new {
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     Email = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     password = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
@@ -26,8 +21,7 @@ namespace server.Migrations
                     CreatedByUserId = table.Column<Guid>(type: "uuid", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("users_pkey", x => x.user_id);
                     table.ForeignKey(
                         name: "FK_users_users_CreatedByUserId",
@@ -38,8 +32,7 @@ namespace server.Migrations
 
             migrationBuilder.CreateTable(
                 name: "books",
-                columns: table => new
-                {
+                columns: table => new {
                     book_id = table.Column<Guid>(type: "uuid", nullable: false),
                     title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
                     author = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: true),
@@ -52,8 +45,7 @@ namespace server.Migrations
                     CreatedByUserId = table.Column<Guid>(type: "uuid", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("books_pkey", x => x.book_id);
                     table.ForeignKey(
                         name: "FK_books_users_CreatedByUserId",
@@ -64,8 +56,7 @@ namespace server.Migrations
 
             migrationBuilder.CreateTable(
                 name: "transactions",
-                columns: table => new
-                {
+                columns: table => new {
                     transaction_id = table.Column<Guid>(type: "uuid", nullable: false),
                     book_id = table.Column<Guid>(type: "uuid", nullable: true),
                     user_id = table.Column<Guid>(type: "uuid", nullable: true),
@@ -80,8 +71,7 @@ namespace server.Migrations
                     CreatedByUserId = table.Column<Guid>(type: "uuid", nullable: true),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("transactions_pkey", x => x.transaction_id);
                     table.ForeignKey(
                         name: "FK_transactions_users_CreatedByUserId",
@@ -143,8 +133,7 @@ namespace server.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "transactions");
 

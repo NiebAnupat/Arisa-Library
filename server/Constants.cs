@@ -1,5 +1,4 @@
-﻿public enum ConfigKey
-{
+﻿public enum ConfigKey {
     JWT,
     AppSettings
 }

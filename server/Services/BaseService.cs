@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Server.Services {
     public class BaseService<T> : IBaseService<T> where T : BaseEntity {

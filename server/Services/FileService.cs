@@ -1,6 +1,6 @@
 ﻿
 namespace Server.Services {
-    public class FileService :IFileService {
+    public class FileService : IFileService {
 
         private readonly IWebHostEnvironment _environment;
 

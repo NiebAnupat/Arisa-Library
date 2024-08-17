@@ -13,13 +13,12 @@ public partial class Transaction : BaseEntity {
 
     public Guid? AdminId { get; set; }
 
-    public DateOnly BorrowDate { get; set; }
+    public DateOnly BorrowDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
 
     public DateOnly? ReturnDate { get; set; }
 
-    public DateOnly DueDate { get; set; }
-
-    public decimal? Fine { get; set; }
+    public DateOnly DueDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(14));
+    public decimal? Fine { get; set; } = 0;
 
     public virtual User Admin { get; set; }
 

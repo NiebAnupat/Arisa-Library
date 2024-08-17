@@ -1,4 +1,4 @@
 ﻿namespace Server.Services.Interfaces {
-    public interface ITransactionService :IBaseService<Transaction> {
+    public interface ITransactionService : IBaseService<Transaction> {
     }
 }

@@ -2,20 +2,16 @@
 
 #nullable disable
 
-namespace server.Migrations
-{
+namespace server.Migrations {
     /// <inheritdoc />
-    public partial class EditEntity : Migration
-    {
+    public partial class EditEntity : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
 
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
 
         }
     }

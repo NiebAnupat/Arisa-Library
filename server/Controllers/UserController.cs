@@ -13,11 +13,11 @@ public class UserController : ControllerBase {
 
     // GET: api/User
     [HttpGet]
-    [Authorize(Roles ="Admin")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers() {
-            var users = await _userService.GetAllAsync();
-            return Ok(users);
-        }
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<IEnumerable<User>>> GetUsers() {
+        var users = await _userService.GetAllAsync();
+        return Ok(users);
+    }
 
     // GET: api/User/5
     [HttpGet("{id}")]

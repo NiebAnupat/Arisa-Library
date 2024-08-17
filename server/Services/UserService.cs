@@ -3,7 +3,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
 using Serilog;
 using server.Models.Options;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,14 +20,14 @@ namespace Server.Services {
             _jwtOptions = options.Value;
         }
         public Task<User> GetByEmailAsync(string email) {
-            return _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            return _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.IsActive == true);
         }
 
 
 
         async Task<bool> IUserService.ValidateUserAsync(string email, string password) {
             Log.Information("Validating user {email}", email);
-            User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            User user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email && u.IsActive == true);
             if (user is null) {
                 Log.Warning("User {email} not found", email);
                 return false;

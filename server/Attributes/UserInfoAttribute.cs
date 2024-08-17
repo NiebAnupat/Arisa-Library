@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
-using Newtonsoft.Json;
 using Serilog;
 using System.Security.Claims;
 using System.Text;
