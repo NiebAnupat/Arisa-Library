@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Server.Models;
 
-public partial class Book
-{
-    public int BookId { get; set; }
+public partial class Book : BaseEntity {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid BookId { get; set; }
 
     public string Title { get; set; } = null!;
 
@@ -15,7 +15,7 @@ public partial class Book
 
     public string CoverFilename { get; set; }
 
-    public bool Available { get; set; }
+    public bool Available { get; set; } = true;
 
-    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    public virtual ICollection<Transaction> Transactions { get; set; } = null;
 }

@@ -1,18 +1,26 @@
-﻿namespace Server.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-public partial class User
-{
-    public int UserId { get; set; }
+namespace Server.Models;
 
-    public string Username { get; set; } = null!;
+public partial class User : BaseEntity {
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public Guid UserId { get; set; }
 
-    public string Password { get; set; } = null!;
+    public string Email { get; set; }
+
+    public string Password { get; set; }
 
     public DateOnly? JoinDate { get; set; }
 
-    public string Role { get; set; } = null!;
+    [EnumDataType(typeof(Role))]
+    public Role Role { get; set; }
 
-    public virtual ICollection<Transaction> TransactionAdmins { get; set; } = new List<Transaction>();
+    //public virtual ICollection<Book> Books { get; set; } = new List<Book>();
 
-    public virtual ICollection<Transaction> TransactionUsers { get; set; } = new List<Transaction>();
+    //public virtual ICollection<User> CreatedUser { get; set; } = new List<User>();
+
+    public virtual ICollection<Transaction> TransactionAdmins { get; set; } = null;
+
+    public virtual ICollection<Transaction> TransactionUsers { get; set; } = null;
 }

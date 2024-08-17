@@ -1,108 +1,93 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Server.Data;
-using Server.Models;
+using server.DTOs;
 
-namespace server.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class UserController : ControllerBase
-    {
-        private readonly ArisaLibraryContext _context;
+[Route("api/[controller]")]
+[ApiController]
+public class UserController : ControllerBase {
+    private readonly IUserService _userService;
 
-        public UserController(ArisaLibraryContext context)
-        {
-            _context = context;
+    public UserController(IUserService userService) {
+        _userService = userService;
+    }
+
+    // GET: api/User
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public async Task<ActionResult<IEnumerable<User>>> GetUsers() {
+        var users = await _userService.GetAllAsync();
+        return Ok(users);
+    }
+
+    // GET: api/User/5
+    [HttpGet("{id}")]
+    public async Task<ActionResult<User>> GetUser(Guid id) {
+        var user = await _userService.GetByIdAsync(id);
+
+        if (user == null) {
+            return NotFound();
         }
 
-        // GET: api/User
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
-        {
-            return await _context.Users.ToListAsync();
+        return Ok(user);
+    }
+
+    // PUT: api/User/5
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> PatchUser(Guid id, UpdateUserDTO model) {
+
+        User user = await _userService.GetByIdAsync(id);
+        if (user is null) {
+            return NotFound();
         }
 
-        // GET: api/User/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
+        if (model.Password != null) {
+            // check password is not changed
+            if (BCrypt.Net.BCrypt.EnhancedVerify(model.Password, user.Password)) {
+                return BadRequest("Password must be not same with old password ");
             }
 
-            return user;
+            user.Password = BCrypt.Net.BCrypt.EnhancedHashPassword(model.Password, 13);
+            user.UpdatedUTC = DateTime.UtcNow;
         }
 
-        // PUT: api/User/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, User user)
-        {
-            if (id != user.UserId)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(user).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+        var result = await _userService.UpdateAsync(user);
+        if (result is null) {
+            return NotFound();
         }
 
-        // POST: api/User
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
-        {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+        return NoContent();
+    }
 
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+    // POST: api/User
+    [HttpPost]
+    public async Task<ActionResult<User>> PostUser(CreateUserDTO model) {
+
+        User isExit = await _userService.GetByEmailAsync(model.Email);
+        if (isExit is not null) {
+            return BadRequest("Email is already taken.");
         }
 
-        // DELETE: api/User/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(int id)
-        {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+        User user = new() {
+            Email = model.Email,
+            Password = BCrypt.Net.BCrypt.EnhancedHashPassword(model.Password, 13),
+            Role = model.Role
+        };
+        var createdUser = await _userService.CreateAsync(user);
+        if (createdUser is null) {
+            return BadRequest();
+        }
+        return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
+    }
 
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+    // DELETE: api/User/5
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(Guid id) {
+        var user = await _userService.GetByIdAsync(id);
+        var result = await _userService.DeleteAsync(user);
+        if (result is null) {
+            return NotFound();
         }
 
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.UserId == id);
-        }
+        return NoContent();
     }
 }
