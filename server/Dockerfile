@@ -49,7 +49,9 @@ WORKDIR /app
 COPY --from=build /app .
 
 # Create wwwroot/uploads folder
-RUN mkdir -p /usr/src/app/wwwroot/uploads
+RUN mkdir -p /app/wwwroot/uploads
+# Set permissions for the uploads folder
+RUN chmod 777 /app/wwwroot/uploads
 
 # Switch to a non-privileged user (defined in the base image) that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
