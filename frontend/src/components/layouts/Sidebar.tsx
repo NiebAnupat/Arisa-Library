@@ -34,37 +34,6 @@ const Sidebar = () => {
             </div>
 
             <ul className="flex flex-col gap-12 items-center">
-                {/* <li className="">
-                    <Link to='/' className="">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger><Home /></TooltipTrigger>
-                                <TooltipContent side='right'>หน้าหลัก</TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                    </Link>
-                </li>
-                <li className="">
-                    <Link to="/bookManage" className="">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger><IdCard /></TooltipTrigger>
-                                <TooltipContent side='right'>จัดการสมาชิก</TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                    </Link>
-                </li>
-                <li className="">
-                    <Link to="/userManage" className="">
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger><LibraryBig /></TooltipTrigger>
-                                <TooltipContent side='right'>จัดการหนังสือ</TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                    </Link>
-                </li> */}
-
                 {
                     SIDEBAR_LINKS.map((link, index) => (
                         <li key={index} className={`rounded-md pt-2 px-2 hover:bg-gray-100 hover:text-blue-600 ${activeLink === index ? 'bg-gray-100 text-blue-600' : ''
