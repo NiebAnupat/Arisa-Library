@@ -124,13 +124,14 @@ try {
     #endregion
 
     #region CORS
+    // Add CORS services
     builder.Services.AddCors(options => {
-        options.AddPolicy("CorsPolicy", builder => {
-            builder.WithOrigins("http://localhost:5173")
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .AllowCredentials();
-        });
+        options.AddPolicy("AllowAllOrigins",
+            policy => {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
     });
     #endregion
 
@@ -141,7 +142,8 @@ try {
         app.UseSwagger();
         app.UseSwaggerUI();
     }
-    app.UseCors();
+    // Enable CORS for the specified policy
+    app.UseCors("AllowAllOrigins");
     app.UseHttpsRedirection();
 
     app.UseStaticFiles();
