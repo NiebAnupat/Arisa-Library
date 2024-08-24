@@ -51,7 +51,6 @@ const Auth = () => {
                 title: "เข้าสู่ระบบสำเร็จ",
                 description: "ยินดีต้อนรับคุณ " + data.username,
             })
-
         } catch (error) {
             console.log(error)
             toast({

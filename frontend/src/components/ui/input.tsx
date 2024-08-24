@@ -4,11 +4,12 @@ import { cn } from "@/lib/utils"
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
+  suffix?: React.ReactNode
   passSuffix?: React.ReactNode
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ passSuffix, className, type, ...props }, ref) => {
+  ({ suffix, passSuffix, className, type, ...props }, ref) => {
     return (
       <div className="relative flex gap-2 items-center">
         <input
@@ -20,6 +21,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
+        <div className="absolute right-3">{suffix}</div>
         <div className="absolute right-3">{passSuffix}</div>
       </div>
     )
