@@ -62,17 +62,21 @@ try {
     #endregion
 
     #region Configuration
-    // Add the JWT and AppSettings to the configuration
+    // Add Options to the configuration
     JWT jwt = new();
     AppSettings appSettings = new();
+    CORS cors = new();
     builder.Services.Configure<JWT>(builder.Configuration.GetSection(ConfigKey.JWT.ToString()));
     builder.Services.Configure<AppSettings>(builder.Configuration.GetSection(ConfigKey.AppSettings.ToString()));
+    builder.Services.Configure<CORS>(builder.Configuration.GetSection(ConfigKey.CORS.ToString()));
 
     // Validate the JWT and set the secret key
     builder.Configuration.GetSection(ConfigKey.JWT.ToString()).Bind(jwt);
     builder.Configuration.GetSection(ConfigKey.AppSettings.ToString()).Bind(appSettings);
+    builder.Configuration.GetSection(ConfigKey.CORS.ToString()).Bind(cors);
     Validator.ValidateObject(jwt, new ValidationContext(jwt), true);
     Validator.ValidateObject(appSettings, new ValidationContext(appSettings), true);
+    Validator.ValidateObject(cors, new ValidationContext(cors), true);
     #endregion
 
     #region Services Registration
@@ -117,6 +121,17 @@ try {
     });
 
     builder.Services.AddAuthorization();
+    #endregion
+
+    #region CORS
+    builder.Services.AddCors(options => {
+        options.AddPolicy("CorsPolicy", builder => {
+            builder.WithOrigins(cors.AllowedOrigins)
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        });
+    });
     #endregion
 
     var app = builder.Build();

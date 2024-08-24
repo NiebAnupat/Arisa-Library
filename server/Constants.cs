@@ -1,4 +1,5 @@
 ﻿public enum ConfigKey {
     JWT,
-    AppSettings
+    AppSettings,
+    CORS
 }
