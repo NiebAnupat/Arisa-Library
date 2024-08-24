@@ -1,13 +1,17 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 import './App.css'
 
-import Sidebar from './components/layouts/Sidebar';
-import Header from './components/layouts/Header';
+import Layout from './components/layouts/Layout';
+import AuthLayout from './components/layouts/AuthLayout.tsx';
 
+import Auth from './pages/Auth.tsx';
 import Home from './pages/Home.tsx';
-import BookManage from './pages/BookManage';
 import UserManage from './pages/UserManage';
-import { useEffect } from 'react';
+import BookManage from './pages/BookManage';
+
+import { Toaster } from './components/ui/toaster.tsx';
 
 function App() {
   useEffect(() => {
@@ -17,17 +21,19 @@ function App() {
   return (
     <Router>
       <div className="app flex">
-        <Sidebar />
-        <div className='flex-1'>
-          <Header />
-          <div className='bg-gray-100 min-h-screen ml-16 rounded-tl-[30px] overflow-hidden'>
-            <Routes>
-              <Route path='/' element={<Home />} />
-              <Route path='/bookManage' element={<UserManage />} />
-              <Route path='/userManage' element={<BookManage />} />
-            </Routes>
-          </div>
-        </div>
+        {/* <Toaster /> */}
+
+        <Routes>
+          <Route element={<AuthLayout/>}>
+            <Route path='/' element={<Auth />} />
+          </Route>
+
+          <Route element={<Layout />}>
+            <Route path='/home' element={<Home />} />
+            <Route path='/bookManage' element={<UserManage />} />
+            <Route path='/userManage' element={<BookManage />} />
+          </Route>
+        </Routes>
       </div>
     </Router>
   );

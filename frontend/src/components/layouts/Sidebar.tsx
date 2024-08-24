@@ -20,7 +20,7 @@ const Sidebar = () => {
     }
 
     const SIDEBAR_LINKS = [
-        { id: 1, path: '/', icon: Home, title: 'หน้าหลัก' },
+        { id: 1, path: '/home', icon: Home, title: 'หน้าหลัก' },
         { id: 2, path: '/bookManage', icon: IdCard, title: 'จัดการสมาชิก' },
         { id: 3, path: '/userManage', icon: LibraryBig, title: 'จัดการหนังสือ' },
     ]
