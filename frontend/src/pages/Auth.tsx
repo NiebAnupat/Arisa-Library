@@ -51,7 +51,7 @@ const Auth = () => {
             })
 
             // set cookie
-            document.cookie = `access_token=${respons.data.accessToken}; path=/; max-age=99999`
+            // document.cookie = `access_token=${respons.data.accessToken}; path=/; max-age=99999`
 
             // Redirect to home page
             window.location.href = "/home"

@@ -55,7 +55,6 @@ try {
         options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
     });
 
-
     #region Database
     builder.Services.AddDbContext<ArisaLibraryContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -126,11 +125,11 @@ try {
     #region CORS
     // Add CORS services
     builder.Services.AddCors(options => {
-        options.AddPolicy("AllowAllOrigins",
+        options.AddPolicy("AllowSpecificOrigin",
             policy => {
-                policy.AllowAnyOrigin()
-                      .AllowAnyMethod()
-                      .AllowAnyHeader();
+                policy.WithOrigins("http://localhost:5173").AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
             });
     });
     #endregion
@@ -143,7 +142,7 @@ try {
         app.UseSwaggerUI();
     }
     // Enable CORS for the specified policy
-    app.UseCors("AllowAllOrigins");
+    app.UseCors("AllowSpecificOrigin");
     app.UseHttpsRedirection();
 
     app.UseStaticFiles();

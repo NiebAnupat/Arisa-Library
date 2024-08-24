@@ -1,4 +1,6 @@
-﻿namespace Server.Middlewares {
+﻿using Serilog;
+
+namespace Server.Middlewares {
     public class JwtCookieMiddleware {
         private readonly RequestDelegate _next;
         public JwtCookieMiddleware(RequestDelegate next) {
@@ -6,9 +8,13 @@
         }
 
         public async Task InvokeAsync(HttpContext context) {
-            if (context.Request.Cookies.ContainsKey("access_token")) {
-                var token = context.Request.Cookies["access_token"];
-                context.Request.Headers.Append("Authorization", $"Bearer {token}");
+            Log.Information("JwtCookieMiddleware invoked");
+            if (context.Request.Cookies.TryGetValue("access_token", out var access_token)) {
+                Log.Information("JwtCookieMiddleware: Found access_token cookie");
+                context.Request.Headers.Append("Authorization", $"Bearer {access_token}");
+                Log.Information("JwtCookieMiddleware: Added Authorization header with token");
+            } else {
+                Log.Information("JwtCookieMiddleware: No access_token cookie found");
             }
 
             await _next(context);
