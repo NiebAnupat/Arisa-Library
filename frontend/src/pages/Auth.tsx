@@ -20,7 +20,7 @@ import { z } from "zod"
 import myAxios from "@/lib/axios"
 
 const formSchema = z.object({
-    username: z.string().nonempty("กรุณากรอกชื่อผู้ใช้งาน"),
+    email: z.string().nonempty("กรุณากรอกอีเมล"),
     password: z.string().nonempty("กรุณากรอกรหัสผ่าน"),
 })
 
@@ -30,7 +30,7 @@ const Auth = () => {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            username: "",
+            email: "",
             password: "",
         },
     })
@@ -40,17 +40,21 @@ const Auth = () => {
         try {
             const respons = await myAxios.post('/auth/login', {
                 header: { 'Content-Type': 'application/json' },
-                username: values.username,
+                email: values.email,
                 password: values.password,
             })
             console.log(respons.data)
 
-            const { data } = respons.data
-
             toast({
                 title: "เข้าสู่ระบบสำเร็จ",
-                description: "ยินดีต้อนรับคุณ " + data.username,
+                description: "ยินดีต้อนรับคุณ " + values.email,
             })
+
+            // set cookie
+            document.cookie = `access_token=${respons.data.accessToken}; path=/; max-age=99999`
+
+            // Redirect to home page
+            window.location.href = "/home"
         } catch (error) {
             console.log(error)
             toast({
@@ -69,7 +73,7 @@ const Auth = () => {
                     <form onSubmit={form.handleSubmit(onSubmit)} className="w-full flex flex-col gap-4">
                         <FormField
                             control={form.control}
-                            name="username"
+                            name="email"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>ชื่อผู้ใช้งาน</FormLabel>

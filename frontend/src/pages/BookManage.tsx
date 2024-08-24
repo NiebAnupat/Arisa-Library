@@ -68,12 +68,12 @@ const BookManage = () => {
         title: string,
     }
 
-    // const fetcher = (url: string): Promise<Book[]> => fetch(url).then((res) => res.json());
+    const fetcher = (url: string): Promise<Book[]> => fetch(url).then((res) => res.json());
 
-    // const { data, error, isLoading } = useSWR<Book[]>('http://localhost:8080/api/book', fetcher);
+    const { data, error, isLoading } = useSWR<Book[]>('http://localhost:8080/api/book', fetcher);
 
-    // if (error) return <div className='h-screen flex justify-center items-center'>failed to load</div>
-    // if (isLoading) return <div className='h-screen flex  items-center'>loading...</div>
+    if (error) return <div className='h-screen flex justify-center items-center'>failed to load</div>
+    if (isLoading) return <div className='h-screen flex  items-center'>loading...</div>
 
     return (
         <div className="flex flex-col gap-6 p-8 overflow-auto">
@@ -109,7 +109,7 @@ const BookManage = () => {
                 <Input type="text" placeholder="ค้นหาหนังสือ" suffix={<Search size={18} />} className="w-[20rem]" />
             </div>
 
-            {/* {
+            {
                 data?.map((book) => (
                     <div key={book.title} className='flex flex-col gap-4  w-fit'>
                         <div className='flex w-[11rem] h-[14rem] rounded-xl'>
@@ -121,10 +121,10 @@ const BookManage = () => {
                         </div>
                     </div>
                 ))
-            } */}
+            }
 
             {/* Books List */}
-            <div className='w-full grid md:grid-cols-4 lg:grid-cols-6 gap-4'>
+            {/* <div className='w-full grid md:grid-cols-4 lg:grid-cols-6 gap-4'>
                 {booksList.map((book) => (
                     <div className='flex flex-col gap-4  w-fit'>
                         <div className='flex w-[11rem] h-[14rem] bg-white rounded-xl'>
@@ -136,7 +136,7 @@ const BookManage = () => {
                         </div>
                     </div>
                 ))}
-            </div>
+            </div> */}
         </div>
     )
 }
