@@ -1,6 +1,5 @@
-import { Link } from "react-router-dom";
-
-import { DataTableDemo } from "@/components/tables/test";
+import { LateBooks } from "@/components/tables/lateBooks";
+import { BorrowBooks } from "@/components/tables/borrowBooks";
 
 const Home = () => {
   return (
@@ -11,40 +10,38 @@ const Home = () => {
 
       {/* Grid of Cards */}
       <div className="grid md:grid-cols-4 gap-6">
-        <Link to='/bookManage' className="bg-white p-4 rounded-xl">
+        <div className="bg-white p-4 rounded-xl">
           <p className="text-2xl font-semibold">100</p>
           <p>สมาชิกทั้งหมด</p>
-        </Link>
-        <Link to='/bookManage' className="bg-white p-4 rounded-xl">
+        </div>
+        <div className="bg-white p-4 rounded-xl">
           <p className="text-2xl font-semibold">100</p>
           <p>หนังสือที่ถูกยืม</p>
-        </Link>
-        <Link to='/bookManage' className="bg-white p-4 rounded-xl">
+        </div>
+        <div className="bg-white p-4 rounded-xl">
           <p className="text-2xl font-semibold">100</p>
           <p>หนังสือคืนเกินเวลา</p>
-        </Link>
-        <Link to='/bookManage' className="bg-white p-4 rounded-xl">
+        </div>
+        <div className="bg-white p-4 rounded-xl">
           <p className="text-2xl font-semibold">100</p>
           <p>สมาชิกใหม่</p>
-        </Link>
+        </div>
       </div>
 
-      {/* Booked & Retuned Table */}
+      {/* Borrow Books & Retuned Late Books Table */}
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="w-full p-4 bg-white rounded-xl">
+        <div className="w-full p-4  bg-white rounded-xl ">
           <p className="font-semibold mb-2">หนังสือที่ถูกยืม</p>
-          <DataTableDemo />
+          <div className="h-full overflow-x-auto">
+            <BorrowBooks />
+          </div>
         </div>
-        <div className="w-full p-4 bg-white rounded-xl">
-          <p className="font-semibold mb-2">หนังสือที่คืนแล้ว</p>
-          <DataTableDemo />
+        <div className="w-full p-4  bg-white rounded-xl">
+          <p className="font-semibold mb-2">หนังสือคืนเกินเวลา</p>
+          <div className="h-full overflow-x-auto">
+            <LateBooks />
+          </div>
         </div>
-      </div>
-
-      {/* OverBooked Table */}
-      <div className="w-full p-4 bg-white rounded-xl">
-        <p className="font-semibold mb-2">หนังสือที่คืนเกินเวลา</p>
-        <DataTableDemo />
       </div>
     </div>
   )
