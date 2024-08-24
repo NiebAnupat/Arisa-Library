@@ -1,4 +1,6 @@
 import { Outlet } from "react-router-dom"
+import { Toaster } from "../ui/toaster";
+
 import Header from '@/components/layouts/Header';
 import Sidebar from '@/components/layouts/Sidebar';
 
@@ -12,6 +14,7 @@ const Layout = () => {
                     <Outlet />
                 </div>
             </div>
+            <Toaster />
         </div>
     )
 }
