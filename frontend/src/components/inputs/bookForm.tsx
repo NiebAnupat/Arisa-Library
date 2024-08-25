@@ -4,7 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-// import myAxios from "@/lib/axios"
+import myAxios from "@/lib/axios"
+import { useToast } from "@/components/ui/use-toast"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -22,26 +23,65 @@ import { BookPlus } from "lucide-react"
 
 const formSchema = z.object({
     title: z.string().nonempty("กรุณากรอกชื่อหนังสือ"),
-    writer: z.string().nonempty("กรุณากรอกชื่อผู้เขียน"),
+    author: z.string().nonempty("กรุณากรอกชื่อผู้เขียน"),
     description: z.string().nonempty("กรุณากรอกรายละเอียด"),
-    image: z.string(),
+    coverFile: z.instanceof(FileList).optional(),
 })
 
-const bookForm = () => {
+const BookForm = () => {
+    const { toast } = useToast()
+
     // 1. Define your form.
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             title: "",
-            writer: "",
+            author: "",
             description: "",
-            image: "",
+            coverFile: undefined,
         },
     })
 
+    const fileRef = form.register("coverFile");
+
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
+
+        // form data 
+        var formData = new FormData();
+        formData.append("title", values.title);
+        formData.append("author", values.author);
+        formData.append("description", values.description);
+        values.coverFile && formData.append("coverFile", values.coverFile[0]);
+        
+        try {
+            const response = await myAxios.post("/book", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+
+            if (response.data.isSuccess === true) {
+                toast({
+                    title: "เพิ่มหนังสือสำเร็จ",
+                    description: "รายการหนังสือถูกเพิ่มเข้าสู่ระบบ",
+                })
+
+                // Refresh the page
+                setTimeout(() => {
+                    window.location.reload()
+                }, 800)
+            }
+        } catch (error) {
+            console.log(error)
+
+            toast({
+                title: "เพิ่มหนังสือไม่สำเร็จ",
+                description: "กรุณาลองใหม่อีกครั้ง",
+            })
+        }
+
     }
 
     return (
@@ -70,7 +110,7 @@ const bookForm = () => {
                                 <FormItem>
                                     <FormLabel>ชื่อหนังสือ</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="shadcn" {...field} />
+                                        <Input placeholder="Ex. The Lion King" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -80,12 +120,12 @@ const bookForm = () => {
                         {/* Book Writer */}
                         <FormField
                             control={form.control}
-                            name="writer"
+                            name="author"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>ชื่อนักเขียน</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="shadcn" {...field} />
+                                        <Input placeholder="Ex. Barry Johnson" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -100,7 +140,7 @@ const bookForm = () => {
                                 <FormItem>
                                     <FormLabel>คำอธิบาย</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="shadcn" {...field} />
+                                        <Input placeholder="In the Pride Lands of Tanzania, a pride of lions rule over the kingdom from Pride Rock." {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -110,17 +150,20 @@ const bookForm = () => {
                         {/* Book Image */}
                         <FormField
                             control={form.control}
-                            name="image"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>ภาพปก</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="shadcn" type="file" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
+                            name="coverFile"
+                            render={({ field }) => {
+                                return (
+                                    <FormItem>
+                                        <FormLabel>File</FormLabel>
+                                        <FormControl>
+                                            <Input type="file" {...fileRef} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                );
+                            }}
                         />
+
                         <DialogFooter>
                             <Button type="submit">บันทึก</Button>
                         </DialogFooter>
@@ -132,4 +175,4 @@ const bookForm = () => {
     )
 }
 
-export default bookForm
+export default BookForm
