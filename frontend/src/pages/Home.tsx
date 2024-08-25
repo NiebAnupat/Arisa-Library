@@ -1,5 +1,8 @@
-import { LateBooks } from "@/components/tables/lateBooks";
-import { BorrowBooks } from "@/components/tables/borrowBooks";
+import myAxios from "@/lib/axios";
+import useSWR from "swr";
+
+import { LateBooks } from "@/components/tables/late-books/lateBooks";
+import BorrowBooks from "@/components/tables/borrow-books/borrow-books";
 
 const Home = () => {
   return (
