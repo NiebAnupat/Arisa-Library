@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { PasswordInput } from "@/components/ui/password-input"
-import { useToast } from "@/components/ui/use-toast"
 import {
     Form,
     FormControl,
@@ -11,13 +10,12 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 
-import { Eye, EyeOff } from 'lucide-react'
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import myAxios from "@/lib/axios"
+import { useToast } from "@/components/ui/use-toast"
 
 const formSchema = z.object({
     email: z.string().nonempty("กรุณากรอกอีเมล"),
@@ -45,16 +43,17 @@ const Auth = () => {
             })
             console.log(respons.data)
 
-            toast({
-                title: "เข้าสู่ระบบสำเร็จ",
-                description: "ยินดีต้อนรับคุณ " + values.email,
-            })
+            if (respons.data.isSuccess === true) {
+                toast({
+                    title: "เข้าสู่ระบบสำเร็จ",
+                    description: "ยินดีต้อนรับเข้าสู่ระบบ",
+                })
 
-            // set cookie
-            // document.cookie = `access_token=${respons.data.accessToken}; path=/; max-age=99999`
-
-            // Redirect to home page
-            window.location.href = "/home"
+                // Redirect to home page
+                setTimeout(() => {
+                    window.location.href = "/home"
+                }, 1500)
+            }
         } catch (error) {
             console.log(error)
             toast({

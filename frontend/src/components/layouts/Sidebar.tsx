@@ -11,6 +11,7 @@ import {
 
 import { Home, LibraryBig, IdCard, LogOut } from 'lucide-react'
 import Logo from '@/assets/images/book.png'
+import myAxios from '@/lib/axios'
 
 const Sidebar = () => {
     const [activeLink, setActiveLink] = useState(0)
@@ -21,9 +22,24 @@ const Sidebar = () => {
 
     const SIDEBAR_LINKS = [
         { id: 1, path: '/home', icon: Home, title: 'หน้าหลัก' },
-        { id: 2, path: '/bookManage', icon: IdCard, title: 'จัดการสมาชิก' },
-        { id: 3, path: '/userManage', icon: LibraryBig, title: 'จัดการหนังสือ' },
+        { id: 2, path: '/userManage', icon: IdCard, title: 'จัดการสมาชิก' },
+        { id: 3, path: '/bookManage', icon: LibraryBig, title: 'จัดการหนังสือ' },
     ]
+
+    const handleLogout = () => {
+        try {
+            // Logout
+            myAxios.post('/auth/logout')
+            localStorage.removeItem('token')
+
+            // Redirect to login page
+            setTimeout(() => {
+                window.location.href = "/"
+            }, 3000);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <div className="fixed w-[65px] h-screen p-4">
@@ -54,7 +70,11 @@ const Sidebar = () => {
 
             {/* Logout */}
             <div className="absolute bottom-2 left-3">
-                <Button variant="ghost" className="p-2 rounded-md">
+                <Button
+                    variant="ghost"
+                    className="p-2 rounded-md"
+                    onClick={handleLogout}
+                >
                     <TooltipProvider>
                         <Tooltip>
                             <TooltipTrigger><LogOut /></TooltipTrigger>

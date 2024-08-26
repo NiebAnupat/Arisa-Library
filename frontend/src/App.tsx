@@ -30,8 +30,8 @@ function App() {
 
           <Route element={<Layout />}>
             <Route path='/home' element={<Home />} />
-            <Route path='/bookManage' element={<UserManage />} />
-            <Route path='/userManage' element={<BookManage />} />
+            <Route path='/userManage' element={<UserManage />} />
+            <Route path='/bookManage' element={<BookManage />} />
           </Route>
         </Routes>
       </div>
