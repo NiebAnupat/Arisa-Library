@@ -7,19 +7,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
-
+} from "@/components/ui/dropdown-menu";
 
 import { MoreHorizontal, Search } from "lucide-react";
 
@@ -36,8 +26,7 @@ export interface Book {
 }
 
 function Item(props: Book) {
-  const [isBorrowOpen, setIsBorrowOpen] = useState(false);
-  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isBorrowOpen, setBorrowOpen] = useState(false);
 
   const handleDelete = async (id: string) => {
     try {
@@ -49,41 +38,27 @@ function Item(props: Book) {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
     <>
-      {/* Borrow Dialog */}
       <ResponsiveDialog
         isOpen={isBorrowOpen}
-        setIsOpen={setIsBorrowOpen}
+        setIsOpen={setBorrowOpen}
         title="ยืมหนังสือ"
       >
-        <BorrowForm
-          bookId={props.bookId}
-          setIsOpen={setIsBorrowOpen}
-        />
+        <BorrowForm bookId={props.bookId} setIsOpen={setBorrowOpen} />
       </ResponsiveDialog>
 
-      {/* Edit Dialog */}
-      <ResponsiveDialog
-        isOpen={isEditOpen}
-        setIsOpen={setIsEditOpen}
-        title="แก้ไขหนังสือ"
-      >
-        hello
-        {/* <BookForm
-          bookId={props.bookId}
-          setIsOpen={setIsEditOpen}
-        /> */}
-      </ResponsiveDialog>
-
-      <div key={props.bookId} className='flex flex-col gap-4  w-fit'>
-        <div className='flex w-[11rem] h-[14rem] bg-white rounded-xl'>
-          <img src={`http://localhost:8080/api/file/${props.coverFilename}`} className=' object-cover rounded-xl' />
+      <div key={props.bookId} className="flex flex-col gap-4 w-fit">
+        <div className="flex w-[11rem] h-[14rem] bg-white rounded-xl">
+          <img
+            src={`http://localhost:8080/api/file/${props.coverFilename}`}
+            className=" object-cover rounded-xl"
+          />
         </div>
         <div>
-          <p className='font-semibold flex items-center justify-between'>
+          <p className="font-semibold flex items-center justify-between">
             {props.title}
             <DropdownMenu>
               <DropdownMenuTrigger>
@@ -92,26 +67,23 @@ function Item(props: Book) {
               <DropdownMenuContent>
                 <DropdownMenuItem
                   onClick={() => {
-                    setIsBorrowOpen(true);
+                    setBorrowOpen(true);
                   }}
                 >
                   ยืมหนังสือ
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem
-                  onClick={() => {
-                    setIsEditOpen(true);
-                  }}
-                >แก้ไขหนังสือ</DropdownMenuItem>
-                <DropdownMenuItem onClick={() => handleDelete(props.bookId)}>ลบหนังสือ</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleDelete(props.bookId)}>
+                  ลบหนังสือ
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </p>
-          <p className='text-xs'>{props.author}</p>
+          <p className="text-xs">{props.author}</p>
         </div>
       </div>
     </>
-  )
+  );
 }
 const BookManage = () => {
   const fetcher = (url: string): Promise<Book[]> =>
@@ -120,6 +92,14 @@ const BookManage = () => {
   const { data, error, isLoading } = useSWR<Book[]>(
     "http://localhost:8080/api/book",
     fetcher
+  );
+
+  // search state
+  const [search, setSearch] = useState("");
+
+  // filter books
+  const filteredBooks = data?.filter((book) =>
+    book.title.toLowerCase().includes(search.toLowerCase())
   );
 
   if (error)
@@ -144,16 +124,19 @@ const BookManage = () => {
           placeholder="ค้นหาหนังสือ"
           suffix={<Search size={18} />}
           className="w-[20rem]"
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
 
-
-
       {/* Books List */}
-      <div className='w-full grid md:grid-cols-4 lg:grid-cols-6 gap-4'>
-        {data?.map((book, i) => (
-          <Item key={i} {...book} />
-        ))}
+      <div className="w-full grid md:grid-cols-4 lg:grid-cols-6 gap-4">
+        {filteredBooks?.length === 0 ? (
+          <p className="md:col-span-4 lg:col-span-6 content-center text-center min-h-[30rem]">
+            
+          </p>
+        ) : (
+          filteredBooks?.map((book, i) => <Item key={i} {...book} />)
+        )}
       </div>
     </div>
   );
