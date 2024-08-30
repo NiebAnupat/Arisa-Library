@@ -1,4 +1,6 @@
-"use client"
+"use client";
+
+import { useState } from "react";
 
 import {
   ColumnDef,
@@ -6,7 +8,8 @@ import {
   useReactTable,
   getCoreRowModel,
   ColumnFiltersState,
-} from "@tanstack/react-table"
+  getFilteredRowModel,
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -15,22 +18,30 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
 interface UsersTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  searchValue?: string;
 }
 
 export function UsersTable<TData, TValue>({
   columns,
   data,
 }: UsersTableProps<TData, TValue>) {
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  })
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+    state: {
+      columnFilters,
+    },
+  });
 
   return (
     <div className="rounded-md border">
@@ -48,7 +59,7 @@ export function UsersTable<TData, TValue>({
                           header.getContext()
                         )}
                   </TableHead>
-                )
+                );
               })}
             </TableRow>
           ))}
@@ -77,5 +88,5 @@ export function UsersTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
