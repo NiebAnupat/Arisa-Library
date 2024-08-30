@@ -1,12 +1,11 @@
-"use client"
+"use client";
 
 import {
   ColumnDef,
   flexRender,
   useReactTable,
   getCoreRowModel,
-  ColumnFiltersState,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -15,22 +14,22 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
 
-interface UsersTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface LateBooksTableProps<TData, TValue> {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
-export function UsersTable<TData, TValue>({
+export function LateBooksTable<TData, TValue>({
   columns,
   data,
-}: UsersTableProps<TData, TValue>) {
+}: LateBooksTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-  })
+  });
 
   return (
     <div className="rounded-md border">
@@ -48,7 +47,7 @@ export function UsersTable<TData, TValue>({
                           header.getContext()
                         )}
                   </TableHead>
-                )
+                );
               })}
             </TableRow>
           ))}
@@ -77,5 +76,5 @@ export function UsersTable<TData, TValue>({
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }

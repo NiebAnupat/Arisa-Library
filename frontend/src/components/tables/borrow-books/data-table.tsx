@@ -5,7 +5,6 @@ import {
   flexRender,
   useReactTable,
   getCoreRowModel,
-  ColumnFiltersState,
 } from "@tanstack/react-table"
 
 import {
