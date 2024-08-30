@@ -19,11 +19,11 @@ const Header = () => {
     if (error)
         return (
             <div className="h-screen flex justify-center items-center">
-                failed to load
+                เกิดข้อผิดพลาด
             </div>
         );
     if (isLoading)
-        return <div className="h-screen flex items-center">loading...</div>;
+        return <div className="h-screen flex items-center">กำลังโหลด...</div>;
 
 
     return (

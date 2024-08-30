@@ -77,14 +77,13 @@ const Home = () => {
         <div className="w-full p-4  bg-white rounded-xl">
           <p className="font-semibold mb-2">หนังสือที่ถูกยืม</p>
           <div className="min-h-[20rem] max-h-[36rem] overflow-auto">
-            {error && (
-              <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
-                เกิดข้อผิดพลาด
-              </p>
-            )}
             {isLoading ? (
               <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
                 กำลังโหลด...
+              </p>
+            ) : error ? (
+              <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
+                เกิดข้อผิดพลาด
               </p>
             ) : (
               <BorrowBooksTable
@@ -98,14 +97,13 @@ const Home = () => {
         <div className="w-full p-4  bg-white rounded-xl">
           <p className="font-semibold mb-2">หนังสือคืนเกินเวลา</p>
           <div className="min-h-[20rem] max-h-[36rem] overflow-auto">
-            {error && (
-              <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
-                Failed to load
-              </p>
-            )}
             {isLoading ? (
               <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
                 กำลังโหลด...
+              </p>
+            ) : error ? (
+              <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
+                เกิดข้อผิดพลาด
               </p>
             ) : (
               <LateBooksTable columns={lateColumns} data={filteredLateData} />
