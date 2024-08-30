@@ -54,9 +54,9 @@ export default function BorrowForm({
         console.log("Failed to borrow");
       } else {
         setIsOpen(false);
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 800);
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
       }
     } catch (error) {
       console.log(error);

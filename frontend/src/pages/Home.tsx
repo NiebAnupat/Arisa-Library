@@ -8,7 +8,6 @@ import {
 } from "@/components/tables/borrow-books/columns";
 import { LateBooksTable } from "@/components/tables/late-books/data-table";
 import { lateColumns } from "@/components/tables/late-books/columns";
-import { useEffect } from "react";
 
 const Home = () => {
   const fetcher = (url: string): Promise<BorrowBook[]> =>
@@ -45,20 +44,6 @@ const Home = () => {
         return currentDate > dueDate && !book.book.available;
       })
     : [];
-
-  // const filteredBorrowData = Array.isArray(data);
-  // data?.filter((book: BorrowBook) => {
-  //   const dueDate = new Date(book.dueDate);
-  //   const currentDate = new Date();
-  //   return currentDate <= dueDate && !book.book.available;
-  // }) ?? [];
-
-  // const filteredLateData =
-  //   data?.filter((book: BorrowBook) => {
-  //     const dueDate = new Date(book.dueDate);
-  //     const currentDate = new Date();
-  //     return currentDate > dueDate && !book.book.available;
-  //   }) ?? [];
 
   return (
     <div className="flex flex-col gap-6 p-8 mb-[4rem]">

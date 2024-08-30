@@ -46,9 +46,9 @@ function Item(props: BorrowBook) {
 
       setIsOpen(false);
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // }, 1000);
     } catch (error) {
       console.log(error);
     }

@@ -121,7 +121,7 @@ const BookManage = () => {
     );
 
   return (
-    <div className="flex flex-col gap-6 p-8 overflow-auto">
+    <div className="flex flex-col gap-6 p-8 overflow-auto mb-[4rem]">
       <div className="flex w-full items-center justify-between">
         <div className="flex gap-4 items-center">
           <p className="text-3xl font-bold">จัดการหนังสือ</p>

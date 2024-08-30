@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ResponsiveDialog } from "@/components/ui/responesive-dialog";
+import { set } from "react-hook-form";
 
 export type LateBook = {
   transactionId: string;
@@ -24,8 +25,9 @@ export type LateBook = {
 };
 
 function Item(props: LateBook) {
-  const [isOpen, setIsOpen] = useState(false);
   const [isFineOpen, setIsFineOpen] = useState(false);
+
+  const [fine, setFine] = useState(0);
 
   const handleReturnBook = async (id: string) => {
     // current date
@@ -38,18 +40,17 @@ function Item(props: LateBook) {
       toDay.getDate();
 
     try {
-      await myAxios.patch(`/transaction/${id}`, {
+      const res = await myAxios.patch(`/transaction/${id}`, {
         returnDate: date,
       });
 
-      console.log("Return book with id: ", id);
-      console.log("Return date: ", date);
+      setFine(res.data.transaction.fine);
 
-      setIsOpen(false);
+      setIsFineOpen(true);
 
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      // setTimeout(() => {
+      //   window.location.reload();
+      // } , 1000);
     } catch (error) {
       console.log(error);
     }
@@ -58,30 +59,14 @@ function Item(props: LateBook) {
   return (
     <>
       <ResponsiveDialog
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-        title="คืนหนังสือ"
-      >
-        <p>
-          ทำรายการคืนหนังสือ {props.book.title} ของ {props.user.email}
-        </p>
-
-        <div className="flex justify-end">
-          <Button
-            onClick={() => handleReturnBook(props.transactionId)}
-            className="w-[4rem]"
-          >
-            ยืนยัน
-          </Button>
-        </div>
-      </ResponsiveDialog>
-
-      <ResponsiveDialog
         isOpen={isFineOpen}
         setIsOpen={setIsFineOpen}
         title="ค่าปรับ"
       >
-        <p>ค่าปรับที่ต้องจ่ายสำหรับหนังสือ {props.book.title} คือ บาท</p>
+        <p>
+          หนังสือ {props.book.title} : ต้องชำระค่าปรับ {fine} บาท
+          <p className="text-xs">โดยคิดค่าปรับ 20 / วัน</p>
+        </p>
 
         <div className="flex justify-end">
           <Button onClick={() => setIsFineOpen(false)} className="w-[4rem]">
@@ -100,7 +85,7 @@ function Item(props: LateBook) {
         <DropdownMenuContent align="end">
           <DropdownMenuItem
             onClick={() => {
-              setIsOpen(true);
+              handleReturnBook(props.transactionId);
             }}
           >
             คืนหนังสือ
