@@ -30,7 +30,7 @@ import { CirclePlus } from "lucide-react"
 
 const formSchema = z.object({
     email: z.string().nonempty("กรุณากรอกอีเมล").email("กรุณากรอกอีเมลให้ถูกต้อง"),
-    password: z.string().nonempty("กรุณากรอกรหัสผ่าน"),
+    password: z.string(),
     role: z.string().nonempty("กรุณาเลือกประเภทสมาชิก"),
 })
 
