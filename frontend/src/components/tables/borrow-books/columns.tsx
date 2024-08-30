@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import myAxios from "@/lib/axios";
 
 import { MoreHorizontal } from "lucide-react";
 
@@ -16,8 +17,8 @@ import { ResponsiveDialog } from "@/components/ui/responesive-dialog";
 
 export type BorrowBook = {
   transactionId: string;
-  title: string;
-  userEmail: string;
+  book: { title: string, available: boolean };
+  user: { email: string };
   borrowDate: Date;
   dueDate: Date;
 };
@@ -26,12 +27,32 @@ function Item(props: BorrowBook) {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleReturnBook = async (id: string) => {
-    console.log("Return book with id: ", id);
-  };
+    // current date
+    const toDay = new Date();
+    const date =
+      toDay.getFullYear() +
+      "-" +
+      (toDay.getMonth() + 1).toString().padStart(2, '0') +
+      "-" +
+      toDay.getDate();
 
-  useEffect(() => {
-    console.log("BorrowBook", props);
-  }, []);
+    try {
+      await myAxios.patch(`/transaction/${id}`, {
+        returnDate: date,
+      });
+
+      console.log("Return book with id: ", id);
+      console.log("Return date: ", date);
+
+      setIsOpen(false);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -40,15 +61,17 @@ function Item(props: BorrowBook) {
         setIsOpen={setIsOpen}
         title="คืนหนังสือ"
       >
-        <p>
-          ทำรายการคืนหนังสือ {props.title} ของ {props.userEmail} ใช่หรือไม่?
-        </p>
-        <Button
-          onClick={() => handleReturnBook(props.transactionId)}
-          className="w-[10rem]"
-        >
-          OK
-        </Button>
+        <p>ทำรายการคืนหนังสือ {props.book.title} ใช่หรือไม่?</p>
+
+        {/* Dialog footer */}
+        <div className="flex justify-end">
+          <Button
+            onClick={() => handleReturnBook(props.transactionId)}
+            className="w-[4rem]"
+          >
+            ยืนยัน
+          </Button>
+        </div>
       </ResponsiveDialog>
 
       <DropdownMenu>
@@ -79,7 +102,7 @@ export const borrowColumns: ColumnDef<BorrowBook>[] = [
     cell: ({ row }) => {
       const book = row.original;
 
-      return <p>{book.title}</p>;
+      return <p>{book.book.title}</p>;
     },
   },
   {
@@ -88,7 +111,7 @@ export const borrowColumns: ColumnDef<BorrowBook>[] = [
     cell: ({ row }) => {
       const book = row.original;
 
-      return <p>{book.userEmail}</p>;
+      return <p>{book.user.email}</p>;
     },
   },
   {
@@ -107,8 +130,8 @@ export const borrowColumns: ColumnDef<BorrowBook>[] = [
       return (
         <Item
           transactionId={user.transactionId}
-          title={user.title}
-          userEmail={user.userEmail}
+          book={user.book}
+          user={user.user}
           borrowDate={user.borrowDate}
           dueDate={user.dueDate}
         />

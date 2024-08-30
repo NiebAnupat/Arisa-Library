@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import myAxios from "@/lib/axios";
 import useSWR from "swr";
 
@@ -18,19 +19,28 @@ const Home = () => {
     fetcher
   );
 
-  // Filter Books from dueDate
+  // Fetch User Data
+  const fetcherUser = (url: string): Promise<any> =>
+    myAxios.get(url).then((res) => res.data);
+
+  const { data: userData, error: userError, isLoading: userIsLoading } = useSWR(
+    "http://localhost:8080/api/user",
+    fetcherUser
+  );
+
+  // Filter Books from dueDate and Book available: false
   const filteredBorrowData =
     data?.filter((book: BorrowBook) => {
       const dueDate = new Date(book.dueDate);
       const currentDate = new Date();
-      return currentDate <= dueDate;
+      return currentDate <= dueDate && !book.book.available;
     }) ?? [];
 
   const filteredLateData =
     data?.filter((book: BorrowBook) => {
       const dueDate = new Date(book.dueDate);
       const currentDate = new Date();
-      return currentDate > dueDate;
+      return currentDate > dueDate && !book.book.available;
     }) ?? [];
 
   return (
@@ -40,22 +50,25 @@ const Home = () => {
       </div>
 
       {/* Grid of Cards */}
-      <div className="grid md:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-4 gap-6 ">
+        <div></div>
         <div className="bg-white p-4 rounded-xl">
-          <p className="text-2xl font-semibold">100</p>
+          <p className="text-2xl font-semibold">
+            {userData?.length ?? 0}
+          </p>
           <p>สมาชิกทั้งหมด</p>
         </div>
+
         <div className="bg-white p-4 rounded-xl">
-          <p className="text-2xl font-semibold">100</p>
+          <p className="text-2xl font-semibold">
+            {filteredBorrowData.length + filteredLateData.length}
+          </p>
           <p>หนังสือที่ถูกยืม</p>
         </div>
+
         <div className="bg-white p-4 rounded-xl">
-          <p className="text-2xl font-semibold">100</p>
+          <p className="text-2xl font-semibold">{filteredLateData.length}</p>
           <p>หนังสือคืนเกินเวลา</p>
-        </div>
-        <div className="bg-white p-4 rounded-xl">
-          <p className="text-2xl font-semibold">100</p>
-          <p>สมาชิกใหม่</p>
         </div>
       </div>
 
@@ -64,21 +77,39 @@ const Home = () => {
         <div className="w-full p-4  bg-white rounded-xl">
           <p className="font-semibold mb-2">หนังสือที่ถูกยืม</p>
           <div className="min-h-[20rem] max-h-[36rem] overflow-auto">
-            {error && <p>Failed to load</p>}
-            {isLoading && <p>Loading...</p>}
-            <BorrowBooksTable
-              columns={borrowColumns}
-              data={filteredBorrowData}
-            />
+            {error && (
+              <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
+                เกิดข้อผิดพลาด
+              </p>
+            )}
+            {isLoading ? (
+              <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
+                กำลังโหลด...
+              </p>
+            ) : (
+              <BorrowBooksTable
+                columns={borrowColumns}
+                data={filteredBorrowData}
+              />
+            )}
           </div>
         </div>
 
         <div className="w-full p-4  bg-white rounded-xl">
           <p className="font-semibold mb-2">หนังสือคืนเกินเวลา</p>
           <div className="min-h-[20rem] max-h-[36rem] overflow-auto">
-            {error && <p>Failed to load</p>}
-            {isLoading && <p>Loading...</p>}
-            <LateBooksTable columns={lateColumns} data={filteredLateData} />
+            {error && (
+              <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
+                Failed to load
+              </p>
+            )}
+            {isLoading ? (
+              <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
+                กำลังโหลด...
+              </p>
+            ) : (
+              <LateBooksTable columns={lateColumns} data={filteredLateData} />
+            )}
           </div>
         </div>
       </div>
@@ -87,56 +118,3 @@ const Home = () => {
 };
 
 export default Home;
-
-// const [borrowData, setBorrowData] = useState<BorrowBook[]>([]);
-//   const [lateData, setLateData] = useState<LateBook[]>([]);
-
-//   useEffect(() => {
-//     myAxios.get("/transaction").then((res) => {
-//       const borrowData = res.data.filter((book: BorrowBook) => {
-//         const dueDate = new Date(book.dueDate);
-//         const currentDate = new Date();
-//         return currentDate <= dueDate;
-//       });
-
-//       // Fetch book name from book id and fetch user email from user id
-//       borrowData.forEach((book: { bookId: any; title: any }) => {
-//         myAxios.get(`/book/${book.bookId}`).then((res) => {
-//           book.title = res.data.title;
-//         });
-//       });
-
-//       // fetch user email from user id
-//       borrowData.forEach((book: { userId: any; userEmail: any }) => {
-//         myAxios.get(`/user/${book.userId}`).then((res) => {
-//           book.userEmail = res.data.email;
-//         });
-//       });
-
-//       const lateData = res.data.filter((book: LateBook) => {
-//         const dueDate = new Date(book.dueDate);
-//         const currentDate = new Date();
-//         return currentDate > dueDate;
-//       });
-
-//       // Fetch book name from book id and fetch user email from user id
-//       lateData.forEach((book: { bookId: any; title: any }) => {
-//         myAxios.get(`/book/${book.bookId}`).then((res) => {
-//           book.title = res.data.title;
-//         });
-//       });
-
-//       // fetch user email from user id
-//       lateData.forEach((book: { userId: any; userEmail: any }) => {
-//         myAxios.get(`/user/${book.userId}`).then((res) => {
-//           book.userEmail = res.data.email;
-//         });
-//       });
-
-//       setBorrowData(borrowData);
-//       setLateData(lateData);
-//     });
-
-//     console.log("Borrow Data: ", borrowData);
-//     console.log("Late Data: ", lateData);
-//   }, []);

@@ -16,12 +16,11 @@ import { ResponsiveDialog } from "@/components/ui/responesive-dialog";
 
 export type LateBook = {
   transactionId: string;
-  title: string;
-  userEmail: string;
+  book: { title: string; available: boolean };
+  user: { email: string };
   borrowDate: Date;
   dueDate: Date;
 };
-
 
 function Item(props: LateBook) {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,9 +37,13 @@ function Item(props: LateBook) {
         title="คืนหนังสือ"
       >
         <p>
-          ทำรายการคืนหนังสือ {props.title} ของ {props.userEmail} ใช่หรือไม่?
+          ทำรายการคืนหนังสือ {props.book.title} ของ {props.user.email}{" "}
+          ใช่หรือไม่?
         </p>
-        <Button onClick={() => handleReturnBook(props.transactionId)} className="w-[10rem]">
+        <Button
+          onClick={() => handleReturnBook(props.transactionId)}
+          className="w-[10rem]"
+        >
           OK
         </Button>
       </ResponsiveDialog>
@@ -70,6 +73,11 @@ export const lateColumns: ColumnDef<LateBook>[] = [
   {
     accessorKey: "title",
     header: "ชื่อหนังสือ",
+    cell: ({ row }) => {
+      const book = row.original;
+
+      return <p className="ml-2">{book.book.title}</p>;
+    },
   },
   {
     accessorKey: "userEmail",
@@ -77,7 +85,7 @@ export const lateColumns: ColumnDef<LateBook>[] = [
     cell: ({ row }) => {
       const book = row.original;
 
-      return <p className="ml-2">{book.userEmail}</p>;
+      return <p className="ml-2">{book.user.email}</p>;
     },
   },
   {
@@ -96,8 +104,8 @@ export const lateColumns: ColumnDef<LateBook>[] = [
       return (
         <Item
           transactionId={user.transactionId}
-          title={user.title}
-          userEmail={user.userEmail}
+          book={user.book}
+          user={user.user}
           borrowDate={user.borrowDate}
           dueDate={user.dueDate}
         />
