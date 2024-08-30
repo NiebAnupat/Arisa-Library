@@ -63,7 +63,6 @@ function Item(props: BorrowBook) {
       >
         <p>ทำรายการคืนหนังสือ {props.book.title} ใช่หรือไม่?</p>
 
-        {/* Dialog footer */}
         <div className="flex justify-end">
           <Button
             onClick={() => handleReturnBook(props.transactionId)}

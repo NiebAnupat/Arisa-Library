@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import myAxios from "@/lib/axios";
 import useSWR from "swr";
 
@@ -9,6 +8,7 @@ import {
 } from "@/components/tables/borrow-books/columns";
 import { LateBooksTable } from "@/components/tables/late-books/data-table";
 import { lateColumns } from "@/components/tables/late-books/columns";
+import { useEffect } from "react";
 
 const Home = () => {
   const fetcher = (url: string): Promise<BorrowBook[]> =>
@@ -23,25 +23,42 @@ const Home = () => {
   const fetcherUser = (url: string): Promise<any> =>
     myAxios.get(url).then((res) => res.data);
 
-  const { data: userData, error: userError, isLoading: userIsLoading } = useSWR(
+  const { data: userData } = useSWR(
     "http://localhost:8080/api/user",
     fetcherUser
   );
 
-  // Filter Books from dueDate and Book available: false
-  const filteredBorrowData =
-    data?.filter((book: BorrowBook) => {
-      const dueDate = new Date(book.dueDate);
-      const currentDate = new Date();
-      return currentDate <= dueDate && !book.book.available;
-    }) ?? [];
+  // Function to Filter Books from dueDate and Book available: false
+  const filteredBorrowData = Array.isArray(data)
+    ? data.filter((book: BorrowBook) => {
+        const dueDate = new Date(book.dueDate);
+        const currentDate = new Date();
+        return currentDate <= dueDate && !book.book.available;
+      })
+    : [];
 
-  const filteredLateData =
-    data?.filter((book: BorrowBook) => {
-      const dueDate = new Date(book.dueDate);
-      const currentDate = new Date();
-      return currentDate > dueDate && !book.book.available;
-    }) ?? [];
+  // Function to Filter Books from dueDate and Book available: false
+  const filteredLateData = Array.isArray(data)
+    ? data.filter((book: BorrowBook) => {
+        const dueDate = new Date(book.dueDate);
+        const currentDate = new Date();
+        return currentDate > dueDate && !book.book.available;
+      })
+    : [];
+
+  // const filteredBorrowData = Array.isArray(data);
+  // data?.filter((book: BorrowBook) => {
+  //   const dueDate = new Date(book.dueDate);
+  //   const currentDate = new Date();
+  //   return currentDate <= dueDate && !book.book.available;
+  // }) ?? [];
+
+  // const filteredLateData =
+  //   data?.filter((book: BorrowBook) => {
+  //     const dueDate = new Date(book.dueDate);
+  //     const currentDate = new Date();
+  //     return currentDate > dueDate && !book.book.available;
+  //   }) ?? [];
 
   return (
     <div className="flex flex-col gap-6 p-8 mb-[4rem]">
@@ -53,9 +70,7 @@ const Home = () => {
       <div className="grid md:grid-cols-4 gap-6 ">
         <div></div>
         <div className="bg-white p-4 rounded-xl">
-          <p className="text-2xl font-semibold">
-            {userData?.length ?? 0}
-          </p>
+          <p className="text-2xl font-semibold">{userData?.length}</p>
           <p>สมาชิกทั้งหมด</p>
         </div>
 

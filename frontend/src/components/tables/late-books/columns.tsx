@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import myAxios from "@/lib/axios";
 
 import { MoreHorizontal } from "lucide-react";
 
@@ -24,9 +25,34 @@ export type LateBook = {
 
 function Item(props: LateBook) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isFineOpen, setIsFineOpen] = useState(false);
 
   const handleReturnBook = async (id: string) => {
-    console.log("Return book with id: ", id);
+    // current date
+    const toDay = new Date();
+    const date =
+      toDay.getFullYear() +
+      "-" +
+      (toDay.getMonth() + 1).toString().padStart(2, "0") +
+      "-" +
+      toDay.getDate();
+
+    try {
+      await myAxios.patch(`/transaction/${id}`, {
+        returnDate: date,
+      });
+
+      console.log("Return book with id: ", id);
+      console.log("Return date: ", date);
+
+      setIsOpen(false);
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -37,15 +63,31 @@ function Item(props: LateBook) {
         title="คืนหนังสือ"
       >
         <p>
-          ทำรายการคืนหนังสือ {props.book.title} ของ {props.user.email}{" "}
-          ใช่หรือไม่?
+          ทำรายการคืนหนังสือ {props.book.title} ของ {props.user.email}
         </p>
-        <Button
-          onClick={() => handleReturnBook(props.transactionId)}
-          className="w-[10rem]"
-        >
-          OK
-        </Button>
+
+        <div className="flex justify-end">
+          <Button
+            onClick={() => handleReturnBook(props.transactionId)}
+            className="w-[4rem]"
+          >
+            ยืนยัน
+          </Button>
+        </div>
+      </ResponsiveDialog>
+
+      <ResponsiveDialog
+        isOpen={isFineOpen}
+        setIsOpen={setIsFineOpen}
+        title="ค่าปรับ"
+      >
+        <p>ค่าปรับที่ต้องจ่ายสำหรับหนังสือ {props.book.title} คือ บาท</p>
+
+        <div className="flex justify-end">
+          <Button onClick={() => setIsFineOpen(false)} className="w-[4rem]">
+            ตกลง
+          </Button>
+        </div>
       </ResponsiveDialog>
 
       <DropdownMenu>
