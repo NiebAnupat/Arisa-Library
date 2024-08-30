@@ -15,16 +15,13 @@ async function getUsers(): Promise<Users[]> {
 }
 
 const UserManage = () => {
-  const { data } = useSWR("/user", getUsers);
+  const { data, error, isLoading } = useSWR("/user", getUsers);
   const [searchValue, setSearchValue] = useState("");
 
-  if (!data) {
-    return <div>Loading...</div>;
-  }
-
-  const filteredData = data.filter(user =>
-    user.email.toLowerCase().includes(searchValue.toLowerCase())
-  );
+  const filteredData =
+    data?.filter((user) =>
+      user.email.toLowerCase().includes(searchValue.toLowerCase())
+    ) ?? [];
 
   return (
     <div className="flex flex-col gap-6 p-8">
@@ -45,8 +42,18 @@ const UserManage = () => {
       </div>
 
       {/* User Table */}
-      <div className="w-full bg-white rounded-xl">
-        <UsersTable columns={columns} data={filteredData} searchValue={searchValue} />
+      <div className="w-full bg-white rounded-xl ">
+        {error && (
+          <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
+            เกิดข้อผิดพลาด
+          </p>
+        )}
+        {isLoading && (
+          <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
+            กำลังโหลด...
+          </p>
+        )}
+        {data && <UsersTable data={filteredData} columns={columns} />}
       </div>
     </div>
   );
