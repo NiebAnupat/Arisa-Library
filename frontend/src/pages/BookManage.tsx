@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import myAxios from "@/lib/axios";
 import useSWR from "swr";
 
@@ -21,6 +21,7 @@ export interface Book {
   bookId: string;
   title: string;
   author: string;
+  available: boolean;
   description: string;
   coverFilename: string;
 }
@@ -62,15 +63,19 @@ function Item(props: Book) {
             {props.title}
             <DropdownMenu>
               <DropdownMenuTrigger>
-                <MoreHorizontal className="h-4 w-4" />
+                {props.available ? (
+                  <MoreHorizontal size={18} />
+                ) : (
+                  <MoreHorizontal size={18} className="text-gray-300" />
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem
                   onClick={() => {
-                    setBorrowOpen(true);
+                    if (props.available) setBorrowOpen(true);
                   }}
                 >
-                  ยืมหนังสือ
+                  {props.available ? "ยืมหนังสือ" : "หนังสือถูกยืมแล้ว"}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => handleDelete(props.bookId)}>
@@ -105,11 +110,15 @@ const BookManage = () => {
   if (error)
     return (
       <div className="h-screen flex justify-center items-center">
-        failed to load
+        เกิดข้อผิดพลาด
       </div>
     );
   if (isLoading)
-    return <div className="h-screen flex items-center">loading...</div>;
+    return (
+      <div className="h-screen flex justify-center items-center">
+        กำลังโหลด...
+      </div>
+    );
 
   return (
     <div className="flex flex-col gap-6 p-8 overflow-auto">
@@ -132,7 +141,7 @@ const BookManage = () => {
       <div className="w-full grid md:grid-cols-4 lg:grid-cols-6 gap-4">
         {filteredBooks?.length === 0 ? (
           <p className="md:col-span-4 lg:col-span-6 content-center text-center min-h-[30rem]">
-            
+            ไม่พบหนังสือ
           </p>
         ) : (
           filteredBooks?.map((book, i) => <Item key={i} {...book} />)

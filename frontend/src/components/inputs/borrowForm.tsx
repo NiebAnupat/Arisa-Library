@@ -19,7 +19,7 @@ const formSchema = z.object({
   bookId: z.string().nonempty("กรุณากรอกรหัสหนังสือ"),
   userEmail: z.string().nonempty("กรุณากรอกอีเมลผู้ยืม"),
   borrowDate: z.string().nonempty("กรุณากรอกวันที่ยืม"),
-  returnDate: z.string().nonempty("กรุณากรอกวันที่คืน"),
+  dueDate: z.string().nonempty("กรุณากรอกวันที่คืน"),
 });
 
 export default function BorrowForm({
@@ -35,31 +35,32 @@ export default function BorrowForm({
       bookId: bookId,
       userEmail: "",
       borrowDate: "",
-      returnDate: "",
+      dueDate: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // try {
-    //   const res = await myAxios.post("/borrow", {
-    //     bookId: values.bookId,
-    //     username: values.userEmail,
-    //     borrowDate: values.borrowDate,
-    //     returnDate: values.returnDate,
-    //   });
-    //   console.log(res.data);
-    //   if (!res) {
-    //     console.log("Failed to borrow");
-    //   } else {
-    //     setIsOpen(false);
-    //     setTimeout(() => {
-    //       window.location.reload();
-    //     }, 800);
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    try {
+      const res = await myAxios.post("/transaction", {
+        bookId: values.bookId,
+        userEmail: values.userEmail,
+        borrowDate: values.borrowDate,
+        dueDate: values.dueDate,
+      });
+
+      console.log(res.data);
+
+      if (!res) {
+        console.log("Failed to borrow");
+      } else {
+        setIsOpen(false);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 800);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
@@ -86,7 +87,7 @@ export default function BorrowForm({
           name="userEmail"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>รหัสผู้ยืม</FormLabel>
+              <FormLabel>อีเมลสมาชิก</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Ex. example@test.com" />
               </FormControl>
@@ -113,7 +114,7 @@ export default function BorrowForm({
         {/* Return Date */}
         <FormField
           control={form.control}
-          name="returnDate"
+          name="dueDate"
           render={({ field }) => (
             <FormItem>
               <FormLabel>วันที่คืน</FormLabel>
