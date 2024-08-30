@@ -3,9 +3,10 @@
 
         [Required]
         public Guid BookId { get; set; }
-        [Required]
 
-        public Guid UserId { get; set; }
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
+        public string UserEmail { get; set; }
 
         public DateOnly BorrowDate { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
 
