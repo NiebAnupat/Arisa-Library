@@ -82,6 +82,9 @@ namespace server.Controllers {
                 return BadRequest();
             }
             Transaction transaction = await _transactionService.GetByIdAsync(id);
+            //transaction.User = null;
+            //transaction.Admin = null;
+            transaction.Book.Transactions = null;
 
             transaction.DueDate = model.DueDate ?? transaction.DueDate;
             bool isReturn = model.ReturnDate.HasValue;
