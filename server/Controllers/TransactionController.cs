@@ -20,10 +20,28 @@ namespace server.Controllers {
 
         // GET: api/Transaction
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions() {
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactions() {
 
             var transactions = await _transactionService.GetAllAsync();
-            return Ok(transactions);
+
+            // Transaction to TransactionDto
+            var transactionDtos = transactions.Select(_ => new TransactionDto {
+                TransactionId = _.TransactionId,
+                Book = new BookDto { Title = _.Book.Title, Available = _.Book.Available },
+                User = new UserDto { Email = _.User.Email },
+                BorrowDate = _.BorrowDate,
+                ReturnDate = _.ReturnDate,
+                DueDate = _.DueDate,
+                Fine = _.Fine,
+                IsActive = _.IsActive,
+                CreatedUTC = _.CreatedUTC,
+                UpdatedUTC = _.UpdatedUTC
+            });
+
+            return Ok(transactionDtos);
+
+
+
         }
 
         // GET: api/Transaction/5
@@ -35,7 +53,18 @@ namespace server.Controllers {
                 return NotFound();
             }
 
-            return Ok(transaction);
+            return Ok(new TransactionDto {
+                TransactionId = transaction.TransactionId,
+                Book = new BookDto { Title = transaction.Book.Title, Available = transaction.Book.Available },
+                User = new UserDto { Email = transaction.User.Email },
+                BorrowDate = transaction.BorrowDate,
+                ReturnDate = transaction.ReturnDate,
+                DueDate = transaction.DueDate,
+                Fine = transaction.Fine,
+                IsActive = transaction.IsActive,
+                CreatedUTC = transaction.CreatedUTC,
+                UpdatedUTC = transaction.UpdatedUTC
+            });
         }
 
         // PUT: api/Transaction/5
