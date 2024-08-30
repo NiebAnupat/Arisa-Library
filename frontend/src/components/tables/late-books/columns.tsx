@@ -61,10 +61,10 @@ function Item(props: LateBook) {
       <ResponsiveDialog
         isOpen={isFineOpen}
         setIsOpen={setIsFineOpen}
-        title="ค่าปรับ"
+        title={`ค่าปรับ ${props.book.title}`}
       >
         <p>
-          หนังสือ {props.book.title} : ต้องชำระค่าปรับ {fine} บาท
+          เกินระยะเวลาคืน {fine/20} วัน ต้องชำระค่าปรับ {fine} บาท
           <p className="text-xs">โดยคิดค่าปรับ 20 / วัน</p>
         </p>
 
