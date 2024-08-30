@@ -24,6 +24,11 @@ namespace server.Controllers {
 
             var transactions = await _transactionService.GetAllAsync();
 
+
+            if (transactions is null) {
+                return NotFound();
+            }
+
             // Transaction to TransactionDto
             var transactionDtos = transactions.Select(_ => new TransactionDto {
                 TransactionId = _.TransactionId,

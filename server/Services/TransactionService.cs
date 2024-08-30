@@ -11,7 +11,7 @@ namespace Server.Services {
         }
 
         public new async Task<IEnumerable<Transaction>> GetAllAsync() {
-            return await _context.Transactions.Include(t => t.Book).Include(t => t.User).AsSplitQuery().ToListAsync();
+            return await _context.Transactions.Include(t => t.Book).Include(t => t.User).Where(_ => _.IsActive).AsSplitQuery().ToListAsync();
         }
 
         public new async Task<Transaction> GetByIdAsync(Guid id) {
