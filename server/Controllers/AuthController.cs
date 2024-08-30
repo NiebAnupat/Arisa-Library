@@ -46,7 +46,7 @@ public class AuthController : ControllerBase {
         });
 
         Log.Information("User {email} logged in", user.Email);
-        return Ok(new { message = "Login successful", accessToken, isSuccess = true });
+        return Ok(new { message = "Login successful", isSuccess = true });
     }
 
 

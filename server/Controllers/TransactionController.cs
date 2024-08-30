@@ -95,7 +95,7 @@ namespace server.Controllers {
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ServiceFilter(typeof(UserInfoAttribute))]
-        public async Task<ActionResult<Transaction>> PostTransaction(CreateTransactionDTO model) {
+        public async Task<ActionResult<Transaction>> PostTransaction([FromBody] CreateTransactionDTO model) {
             User admin = (User) HttpContext.Items["User"];
             User user = await _userService.GetByEmailAsync(model.UserEmail);
             Book book = await _bookService.GetByIdAsync(model.BookId);
