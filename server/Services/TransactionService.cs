@@ -11,41 +11,11 @@ namespace Server.Services {
         }
 
         public new async Task<IEnumerable<Transaction>> GetAllAsync() {
-            return await _context.Transactions.Include(t => t.Book).Include(t => t.User).Select(_ => new Transaction {
-                TransactionId = _.TransactionId,
-                BookId = _.BookId,
-                Book = new Book { Title = _.Book.Title, Available = _.Book.Available },
-                User = new User { Email = _.User.Email },
-                BorrowDate = _.BorrowDate,
-                ReturnDate = _.ReturnDate,
-                DueDate = _.DueDate,
-                Fine = _.Fine,
-                IsActive = _.IsActive,
-                CreatedUTC = _.CreatedUTC,
-                UpdatedUTC = _.UpdatedUTC,
-                UserId = _.UserId,
-                AdminId = _.AdminId
-
-            }).AsSplitQuery().ToListAsync();
+            return await _context.Transactions.Include(t => t.Book).Include(t => t.User).AsSplitQuery().ToListAsync();
         }
 
         public new async Task<Transaction> GetByIdAsync(Guid id) {
-            return await _context.Transactions.Include(t => t.Book).Include(t => t.User).Select(_ => new Transaction {
-                TransactionId = _.TransactionId,
-                BookId = _.BookId,
-                Book = new Book { Title = _.Book.Title, Available = _.Book.Available },
-                User = new User { Email = _.User.Email },
-                BorrowDate = _.BorrowDate,
-                ReturnDate = _.ReturnDate,
-                DueDate = _.DueDate,
-                Fine = _.Fine,
-                IsActive = _.IsActive,
-                CreatedUTC = _.CreatedUTC,
-                UpdatedUTC = _.UpdatedUTC,
-                UserId = _.UserId,
-                AdminId = _.AdminId
-
-            }).Where(t => t.TransactionId == id && t.IsActive).AsSplitQuery().FirstOrDefaultAsync();
+            return await _context.Transactions.Include(t => t.Book).Include(t => t.User).Where(t => t.TransactionId == id && t.IsActive).AsSplitQuery().FirstOrDefaultAsync();
         }
     }
 
