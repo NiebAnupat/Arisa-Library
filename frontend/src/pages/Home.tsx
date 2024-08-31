@@ -14,7 +14,7 @@ const Home = () => {
     myAxios.get(url).then((res) => res.data);
 
   const { data, error, isLoading } = useSWR<BorrowBook[]>(
-    "http://localhost:8081/api/transaction",
+    "http://localhost:8081/api/transaction/not-returned",
     fetcher
   );
 
