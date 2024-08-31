@@ -19,7 +19,7 @@ const Home = () => {
   );
 
   // Fetch User Data
-  const fetcherUser = (url: string): Promise<any> =>
+  const fetcherUser = (url: string) =>
     myAxios.get(url).then((res) => res.data);
 
   const { data: userData } = useSWR(
