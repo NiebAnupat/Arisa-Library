@@ -59,7 +59,7 @@ const BookForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
     // form data
-    var formData = new FormData();
+    const formData = new FormData();
     formData.append("title", values.title);
     formData.append("author", values.author);
     formData.append("description", values.description);
@@ -165,7 +165,7 @@ const BookForm = () => {
             <FormField
               control={form.control}
               name="coverFile"
-              render={({}) => {
+              render={() => {
                 return (
                   <FormItem>
                     <FormLabel>File</FormLabel>

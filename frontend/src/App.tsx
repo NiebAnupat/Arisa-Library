@@ -11,8 +11,6 @@ import Home from './pages/Home.tsx';
 import UserManage from './pages/UserManage';
 import BookManage from './pages/BookManage';
 
-import { Toaster } from './components/ui/toaster.tsx';
-
 function App() {
   useEffect(() => {
     document.title = 'ระบบบรรณารักษ์ ห้องสมุด'

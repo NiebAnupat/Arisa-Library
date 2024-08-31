@@ -14,7 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ResponsiveDialog } from "@/components/ui/responesive-dialog";
-import { set } from "react-hook-form";
 
 export type LateBook = {
   transactionId: string;
@@ -64,8 +63,8 @@ function Item(props: LateBook) {
         title={`ค่าปรับ ${props.book.title}`}
       >
         <p>
-          เกินระยะเวลาคืน {fine/20} วัน ต้องชำระค่าปรับ {fine} บาท
-          <p className="text-xs">โดยคิดค่าปรับ 20 / วัน</p>
+          เกินระยะเวลาคืน {fine / 20} วัน ต้องชำระค่าปรับ {fine} บาท
+          <p className="text-xs">โดยคิดค่าปรับ 20 บาท / วัน</p>
         </p>
 
         <div className="flex justify-end">
