@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using server.DTOs;
 
 namespace Server.Services {
@@ -20,6 +21,7 @@ namespace Server.Services {
 
         public async Task<IEnumerable<Transaction>> GetNotReturnedTransactions()
         {
+            Log.Information("{Service} Get not returned transactions", nameof(TransactionService));
             return await _context.Transactions.Include(t => t.Book).Include(t => t.User).Where(t => t.IsActive && t.ReturnDate == null).AsSplitQuery().ToListAsync();
         }
     }

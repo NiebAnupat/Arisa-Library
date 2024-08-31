@@ -54,7 +54,7 @@ function Item(props: Book) {
       <div key={props.bookId} className="flex flex-col gap-4 w-fit">
         <div className="flex w-[11rem] h-[14rem] bg-white rounded-xl">
           <img
-            src={`http://localhost:8081/api/file/${props.coverFilename}`}
+            src={`https://arisa-server.anupat-dev.com/api/file/${props.coverFilename}`}
             className=" object-cover rounded-xl"
           />
         </div>
@@ -95,7 +95,7 @@ const BookManage = () => {
     myAxios.get(url).then((res) => res.data);
 
   const { data, error, isLoading } = useSWR<Book[]>(
-    "http://localhost:8081/api/book",
+    "https://arisa-server.anupat-dev.com/api/book",
     fetcher
   );
 
