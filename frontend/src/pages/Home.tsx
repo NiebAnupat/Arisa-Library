@@ -14,7 +14,7 @@ const Home = () => {
     myAxios.get(url).then((res) => res.data);
 
   const { data, error, isLoading } = useSWR<BorrowBook[]>(
-    "http://localhost:8081/api/transaction/not-returned",
+    "https://arisa-server.anupat-dev.com/api/transaction/not-returned",
     fetcher
   );
 
@@ -22,7 +22,7 @@ const Home = () => {
   const fetcherUser = (url: string) => myAxios.get(url).then((res) => res.data);
 
   const { data: userData } = useSWR(
-    "http://localhost:8081/api/user",
+    "https://arisa-server.anupat-dev.com/api/user",
     fetcherUser
   );
 
