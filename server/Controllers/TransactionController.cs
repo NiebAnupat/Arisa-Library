@@ -55,7 +55,7 @@ namespace server.Controllers
             return Ok(transactionDtos);
         }
 
-        [HttpGet("/not-returned")]
+        [HttpGet("not-returned")]
         public async Task<ActionResult<IEnumerable<TransactionDto>>> GetNotReturnedTransactions()
         {
             var transactions = await _transactionService.GetNotReturnedTransactions();
