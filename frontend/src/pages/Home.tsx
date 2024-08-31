@@ -14,16 +14,15 @@ const Home = () => {
     myAxios.get(url).then((res) => res.data);
 
   const { data, error, isLoading } = useSWR<BorrowBook[]>(
-    "http://localhost:8080/api/transaction",
+    "https:/arisa-server.anupat-dev.com/api/transaction",
     fetcher
   );
 
   // Fetch User Data
-  const fetcherUser = (url: string) =>
-    myAxios.get(url).then((res) => res.data);
+  const fetcherUser = (url: string) => myAxios.get(url).then((res) => res.data);
 
   const { data: userData } = useSWR(
-    "http://localhost:8080/api/user",
+    "https:/arisa-server.anupat-dev.com/api/user",
     fetcherUser
   );
 
