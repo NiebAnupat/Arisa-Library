@@ -3,5 +3,7 @@
         new Task<IEnumerable<Transaction>> GetAllAsync();
 
         new Task<Transaction> GetByIdAsync (Guid id);
+
+        Task<IEnumerable<Transaction>> GetNotReturnedTransactions ();
     }
 }

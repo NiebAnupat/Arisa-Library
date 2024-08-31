@@ -1,20 +1,20 @@
 import myAxios from "@/lib/axios";
 import useSWR from "swr";
 
-import { BorrowBooksTable } from "@/components/tables/borrow-books/data-table";
 import {
-  BorrowBook,
-  borrowColumns,
+    BorrowBook,
+    borrowColumns,
 } from "@/components/tables/borrow-books/columns";
-import { LateBooksTable } from "@/components/tables/late-books/data-table";
+import { BorrowBooksTable } from "@/components/tables/borrow-books/data-table";
 import { lateColumns } from "@/components/tables/late-books/columns";
+import { LateBooksTable } from "@/components/tables/late-books/data-table";
 
 const Home = () => {
   const fetcher = (url: string): Promise<BorrowBook[]> =>
     myAxios.get(url).then((res) => res.data);
 
   const { data, error, isLoading } = useSWR<BorrowBook[]>(
-    "https://arisa-server.anupat-dev.com/api/transaction",
+    "http://localhost:8081/api/transaction",
     fetcher
   );
 
@@ -22,7 +22,7 @@ const Home = () => {
   const fetcherUser = (url: string) => myAxios.get(url).then((res) => res.data);
 
   const { data: userData } = useSWR(
-    "https://arisa-server.anupat-dev.com/api/user",
+    "http://localhost:8081/api/user",
     fetcherUser
   );
 

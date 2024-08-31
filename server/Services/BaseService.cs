@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 namespace Server.Services {
     public class BaseService<T> : IBaseService<T> where T : BaseEntity {
@@ -8,7 +9,7 @@ namespace Server.Services {
         }
 
         public async Task<T> CreateAsync(T entity) {
-            _context.Set<T>().Add(entity);
+            await _context.Set<T>().AddAsync(entity);
             await _context.SaveChangesAsync();
             return entity;
         }

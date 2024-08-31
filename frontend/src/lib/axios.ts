@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const myAxios = axios.create({
-  baseURL: "https://arisa-server.anupat-dev.com/api",
+  // baseURL: "http://localhost:8081/api",
+  baseURL: "http://localhost:8081/api",
   headers: {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",

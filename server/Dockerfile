@@ -48,14 +48,16 @@ WORKDIR /app
 # Copy everything needed to run the app from the "build" stage.
 COPY --from=build /app .
 
-# Create wwwroot/uploads folder
+USER root
 RUN mkdir -p /app/wwwroot/uploads
-# Set permissions for the uploads folder
-RUN chmod 777 /app/wwwroot/uploads
+
+# Set ownership and permissions for the uploads folder
+RUN chown -R $APP_UID /app/wwwroot/uploads && chmod 755 /app/wwwroot/uploads
 
 # Switch to a non-privileged user (defined in the base image) that the app will run under.
 # See https://docs.docker.com/go/dockerfile-user-best-practices/
 # and https://github.com/dotnet/dotnet-docker/discussions/4764
-USER $APP_UID
+# USER $APP_UID
+# make user root
 
 ENTRYPOINT ["dotnet", "server.dll"]

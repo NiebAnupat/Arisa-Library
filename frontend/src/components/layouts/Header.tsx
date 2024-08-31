@@ -7,7 +7,7 @@ const Header = () => {
   const fetcher = (url: string) => myAxios.get(url).then((res) => res.data);
 
   const { data, error, isLoading } = useSWR(
-    "https://arisa-server.anupat-dev.com/api/auth/profile",
+    "http://localhost:8081/api/auth/profile",
     fetcher
   );
 
