@@ -94,7 +94,7 @@ const Home = () => {
         </div>
 
         <div className="w-full p-4  bg-white rounded-xl">
-          <p className="font-semibold mb-2">หนังสือคืนเกินเวลา</p>
+          <p className="font-semibold mb-2">หนังสือคืนเกินกำหนด</p>
           <div className="min-h-[20rem] max-h-[36rem] overflow-auto">
             {isLoading ? (
               <p className="w-full min-h-[20rem] flex text-center justify-center items-center">
