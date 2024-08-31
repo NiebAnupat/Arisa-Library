@@ -1,11 +1,21 @@
 name: arisa-library
 services:
-  server:
-    build:
-      context: ./server
-      target: final
+  client:
+    image: niebanupat/arisa-client:latest
+    depends_on:
+      server:
+        condition: service_started
     ports:
-      - 8080:8080
+      - 5178:5173
+  server:
+    image: niebanupat/arisa-server:latest
+    depends_on:
+      postgres:
+        condition: service_started
+    ports:
+      - 8081:8080
+    volumes:
+      - .docker-volumes/server-data:/app/wwwroot/uploads
   postgres:
     image: postgres:16-alpine
     environment:
