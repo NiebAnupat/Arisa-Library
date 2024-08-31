@@ -127,7 +127,7 @@ try {
     builder.Services.AddCors(options => {
         options.AddPolicy("AllowSpecificOrigin",
             policy => {
-                policy.WithOrigins("http://localhost:5173").AllowAnyHeader()
+                policy.WithOrigins("https://arisa-library.anupat-dev.com/").AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
             });
