@@ -6,7 +6,7 @@ services:
       server:
         condition: service_started
     ports:
-      - 5178:5173
+      - 3001:3000
   server:
     image: niebanupat/arisa-server:latest
     depends_on:
@@ -23,6 +23,6 @@ services:
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: arisa_library
     ports:
-      - "5432:5432"
+      - "5431:5432"
     volumes:
       - .docker-volumes/postgres-data:/var/lib/postgresql/data
